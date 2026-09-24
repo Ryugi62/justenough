@@ -109,8 +109,8 @@
   {
     "id": "s17",
     "target": "slide:9",
-    "ko": "백십이 개의 테스트, 이천 건의 차분 테스트, 두 컴파일러 버전에서의 컴파일, 그리고 실제 네트워크 실행까지 CI로 묶었습니다.",
-    "en": "112 tests, a 2,000-case differential test, compilation on two compiler versions, and the real-network run — all wired into CI."
+    "ko": "백십팔 개의 테스트, 이천 건의 차분 테스트, 두 컴파일러 버전에서의 컴파일, 그리고 실제 네트워크 실행까지 CI로 묶었습니다.",
+    "en": "118 tests, a 2,000-case differential test, compilation on two compiler versions, and the real-network run — all wired into CI."
   },
   {
     "id": "s18",

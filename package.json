@@ -48,7 +48,8 @@
     "verify": "npm run compile && npm run typecheck && npm run test && npm run build",
     "devnet:up": "docker compose -f devnet/compose.yml up -d --wait",
     "devnet:down": "docker compose -f devnet/compose.yml down",
-    "devnet:e2e": "tsx scripts/devnet-e2e.ts"
+    "devnet:e2e": "tsx scripts/devnet-e2e.ts",
+    "issue:batch": "tsx scripts/issue-batch.ts"
   },
   "keywords": [
     "midnight",

@@ -28,7 +28,7 @@ Apply for a public youth programme by proving in zero knowledge that you meet it
 compact update 0.31.1                  # the compiler version the Midnight network supports
 git clone https://github.com/Ryugi62/justenough && cd justenough
 npm ci
-npm run verify    # compile the contract (6 circuits) -> typecheck -> 112 tests -> build the web demo
+npm run verify    # compile the contract (6 circuits) -> typecheck -> 118 tests -> build the web demo
 npm run preview   # open the printed URL (add ?lang=en for English); the compiled circuits run in your browser, no wallet needed
 
 # Optional, real network with real proofs (needs Docker): local node + indexer + proof server

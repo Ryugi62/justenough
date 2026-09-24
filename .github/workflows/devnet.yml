@@ -27,7 +27,9 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run compile
-      - name: start the local network (indexer can race the node on a cold runner, so retry)
+      # On a cold runner the indexer can start before the node's first block and exit with
+      # "Cannot construct OnlineClientAtBlock: block number 1 not found" (seen 2026-09-24); retry.
+      - name: start the local network (retry the indexer's cold-start race)
         run: |
           for i in 1 2 3; do
             if npm run devnet:up; then exit 0; fi

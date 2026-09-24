@@ -13,11 +13,11 @@
 
 ```bash
 git clone https://github.com/Ryugi62/justenough && cd justenough
-npm ci && npm test                 # 112 tests on the committed compiled contract (no compiler needed)
+npm ci && npm test                 # 118 tests on the committed compiled contract (no compiler needed)
 npm run build && npm run preview   # the same wallet-free demo at the printed URL
 ```
 
-**112 tests** · 1 Compact contract, 6 circuits (compactc 0.31.1, also compiled on 0.34.0) · full lifecycle run on a local Midnight network with real proofs (8 transactions) · Apache-2.0
+**118 tests** · 1 Compact contract, 6 circuits (compactc 0.31.1, also compiled on 0.34.0) · full lifecycle run on a local Midnight network with real proofs (8 transactions) · Apache-2.0
 
 Hackathon entries: Midnight Korea Hackathon 2026, 3rd-Web-Hack. Written from scratch during both events (first commit 2026-09-24); for 3rd-Web-Hack we added the English interface and the Web3 community grant scenario.
 
@@ -80,7 +80,7 @@ JustEnough keeps the eligibility check and removes the documents:
 compact update 0.31.1                  # the compiler version the Midnight network supports
 git clone https://github.com/Ryugi62/justenough && cd justenough
 npm ci
-npm run verify    # compile the contract (6 circuits) -> typecheck -> 112 tests -> build the web demo
+npm run verify    # compile the contract (6 circuits) -> typecheck -> 118 tests -> build the web demo
 npm run preview   # open the printed URL (add ?lang=en for English); the compiled circuits run in your browser, no wallet needed
 
 # Optional, real network with real proofs (needs Docker): local node + indexer + proof server
@@ -111,6 +111,16 @@ Pure helpers exported for off-chain code (so TypeScript hashes exactly like the 
 
 Age is 만 나이: `birthRangeFor(referenceDate, {minAge, maxAge})` turns "만 19~34세" into an inclusive YYYYMMDD range, so the circuit only compares integers (swept against the definition for every day of 2027–2028, including 29 February).
 
+## Issuer path for a first pilot (registrar batch)
+
+The first pilot we propose is a university scholarship: the registrar (학사 시스템) is the issuer and the scholarship office is the operator, so no outside integration is needed. The registrar exports one CSV row per student and runs one command:
+
+```bash
+npm run issue:batch -- docs/registrar-sample.csv out/   # synthetic sample, 5 rows
+```
+
+It writes `out/commitments.json` — the only file to publish (one `issueCredential` per entry, in shuffled order so the list does not follow the export) — and `out/holders/<ref>.json`, one private bundle per student (credential, 32-byte secret, salt) to deliver through the registrar's own portal. Rows that fail validation (impossible date, district outside its province, duplicate student reference, …) are rejected with their line number and not issued. Measured on 2026-09-24: 1,000 rows → commitments in 79–83 ms off-chain (3 runs); on-chain, each `issueCredential` took 17.1–17.4 s to prove and submit on the local devnet (`docs/devnet-run.json`), so a batch-insert circuit is on the roadmap.
+
 ## Architecture
 
 ```
@@ -128,15 +138,15 @@ web/              composition root + UI (Vite, no framework, system fonts only; 
 
 `tests/architecture.test.ts` fails if the domain imports anything outside itself or if domain/application touch `@midnight-ntwrk/*` or the generated contract.
 
-## Tests (112)
+## Tests (118)
 
 | Suite | What it pins down |
 |---|---|
 | `tests/contract/justenough.contract.test.ts` (27) | issuer-only issuance · eligible apply · **no attribute value in public state or transcript** · duplicate refused · unissued / tampered credential refused · borrowed Merkle path refused · each predicate enforced · receipts unlinkable · historic roots · closed programmes · operator-only close/select · capacity · claim only when selected · draw seed committed at registration and revealed at close |
 | `tests/contract/differential.test.ts` (1) | TypeScript rule ≡ compiled `meetsPolicy` on 2,000 boundary-heavy random cases |
 | `tests/application/*.test.ts` (11) | use cases with fakes; draw selects the lowest tickets; the audit catches a manipulated selection; full lifecycle on the compiled contract; every real clause registers |
-| `tests/domain/*.test.ts` (41) | 만 나이 edges (incl. 29 Feb), eligibility explanations in Korean and English, clause → policy, English glosses for every clause, both demo presets (A eligible, B fails exactly one predicate, the forged credential passes the values), ticket ranking and audit |
-| `tests/adapters/*.test.ts` (8) | the privacy scanner itself (little-endian atom decoding, no false positive from a hash that merely contains the digits); "What the chain sees": 0 private values after every call, a positive control that finds the public income cap, and the Web3 grant preset's accept / duplicate / ineligible / forged beats on the compiled contract |
+| `tests/domain/*.test.ts` (44) | 만 나이 edges (incl. 29 Feb), eligibility explanations in Korean and English, clause → policy, English glosses for every clause, both demo presets (A eligible, B fails exactly one predicate, the forged credential passes the values), registrar CSV parsing (every bad row rejected with its line number), ticket ranking and audit |
+| `tests/adapters/*.test.ts` (11) | the privacy scanner itself (little-endian atom decoding, no false positive from a hash that merely contains the digits); "What the chain sees": 0 private values after every call, a positive control that finds the public income cap, and the Web3 grant preset's accept / duplicate / ineligible / forged beats on the compiled contract; registrar batch issuance with the contract's own hash (shuffled public list that names nobody, a bundle that really applies, 1,000 rows < 5 s) |
 | `tests/web/i18n.test.ts` (4) | Korean and English catalogues have the same keys; no Hangul in English outside `lang="ko"`; language choice from `?lang=` and the browser |
 | `tests/architecture.test.ts` (3) | Clean Architecture dependency rule |
 | `tests/docs/*.test.ts` (17) | this README ≡ the submission form text; README first screen (tagline, demo links, 3-line quick start, test count, CI badge, both hackathon entries); both decks present; the recorded devnet run (8 transactions, 2 refusals, seed commitment matched, 0 attribute values among the decoded public atoms) |
@@ -169,7 +179,7 @@ See [`docs/THREAT-MODEL.md`](docs/THREAT-MODEL.md). In short: the issuer is trus
 
 1. **Preprod deployment** — the script is ready (`MIDNIGHT_NETWORK=preprod npm run devnet:e2e`); it needs a faucet-funded wallet.
 2. Wallet-connected UI mode (Lace, `midnight-js` adapter behind the same application ports). The zero-install browser demo stays the default so reviewers can verify without a wallet.
-3. Issuer adapter for the government data-sharing channel; multi-issuer proofs.
+3. Issuer adapter for the government data-sharing channel; multi-issuer proofs; a batch-insert circuit (many commitments per transaction) for registrar batches.
 4. Set-membership and OR policies; revocation via issuer epoch roots; a public randomness beacon mixed into the draw seed; operator-namespaced programme ids.
 
 ## Ecosystem attribution

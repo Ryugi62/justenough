@@ -84,6 +84,10 @@ export function districtName(code: number, lang: Lang = 'ko'): string {
   return d?.ko ?? `시군구 ${code}`;
 }
 
+export function isKnownSido(code: number): boolean {
+  return code in NAMES;
+}
+
 export function sidoOfDistrict(sigungu: number): number {
   return Math.floor(sigungu / 1000);
 }

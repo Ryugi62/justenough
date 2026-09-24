@@ -7,65 +7,65 @@ JustEnough — a Midnight DApp that proves eligibility instead of handing over d
 The institution needs three yes/no answers — residence, employment, income — but receives three whole documents. Most applicants are not selected, yet their papers stay behind.
 
 3
-00:00:18,985 --> 00:00:29,145
+00:00:18,986 --> 00:00:29,146
 We keep the check and remove the documents: the issuer publishes one hash, the applicant submits one proof, the operator draws anonymous receipts.
 
 4
-00:00:30,046 --> 00:00:40,676
+00:00:30,047 --> 00:00:40,677
 Midnight's dual ledger does the split: values and secrets stay on the applicant's device; the ledger holds hashes, the public rule and receipts.
 
 5
-00:00:41,578 --> 00:00:47,858
+00:00:41,580 --> 00:00:47,860
 The live demo. This page runs the compiled Compact circuits right in the browser — no wallet needed.
 
 6
-00:00:48,761 --> 00:00:56,861
+00:00:48,762 --> 00:00:56,862
 The issuer issues applicant A's credential: one hash on the public ledger, the values only on A's device.
 
 7
-00:00:57,760 --> 00:01:05,800
+00:00:57,764 --> 00:01:05,804
 The programme rule is public text anyway, so it goes on the ledger as is. Seven real notices were translated the same way.
 
 8
-00:01:06,700 --> 00:01:10,190
+00:01:06,705 --> 00:01:10,195
 A checks all seven conditions on their own device,
 
 9
-00:01:11,090 --> 00:01:23,900
+00:01:11,096 --> 00:01:23,906
 and applies with a single proof. Zero personal fields reach the institution. The "What the chain sees" panel shows one receipt hash, and a live re-scan of the public data finds none of A's private values.
 
 10
-00:01:24,801 --> 00:01:29,591
+00:01:24,809 --> 00:01:29,599
 Applying twice produces the same receipt, so the circuit refuses.
 
 11
-00:01:30,495 --> 00:01:35,165
+00:01:30,502 --> 00:01:35,172
 B is employed. If B submits anyway, no proof can be produced.
 
 12
-00:01:36,067 --> 00:01:41,977
+00:01:36,072 --> 00:01:41,982
 Rewriting the value to 'unemployed' fails too: the hash no longer matches anything the issuer published.
 
 13
-00:01:42,878 --> 00:01:58,298
+00:01:42,880 --> 00:01:58,300
 At closing the operator reveals the draw seed it committed before anyone applied. The 5 lowest tickets of 21 receipts win, anyone can recompute it, and the operator still doesn't know who is who.
 
 14
-00:01:59,198 --> 00:02:06,638
+00:01:59,201 --> 00:02:06,641
 Only A, who was selected, proves the receipt is theirs and claims. Rejected applicants' data never reached the institution.
 
 15
-00:02:07,541 --> 00:02:19,441
+00:02:07,540 --> 00:02:19,440
 The same flow ran on a local Midnight network with real proofs: eight transactions, the seed matched its commitment, zero attribute values in the indexer's public state.
 
 16
-00:02:20,343 --> 00:02:25,053
+00:02:20,342 --> 00:02:25,052
 Seven cheating attempts, all refused by the circuit and pinned by tests.
 
 17
-00:02:25,955 --> 00:02:34,725
-112 tests, a 2,000-case differential test, compilation on two compiler versions, and the real-network run — all wired into CI.
+00:02:25,953 --> 00:02:34,873
+118 tests, a 2,000-case differential test, compilation on two compiler versions, and the real-network run — all wired into CI.
 
 18
-00:02:35,626 --> 00:02:42,506
+00:02:35,776 --> 00:02:42,656
 Clone once, run two commands, see for yourself. JustEnough — prove only what is needed.

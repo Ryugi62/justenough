@@ -33,7 +33,7 @@
 ## Residual risks and mitigations
 | Risk | Why it remains | Mitigation |
 |---|---|---|
-| Timing correlation (issuance → application) | leaves and receipts are timestamped by blocks | issue credentials in batches; the historic root lets applicants prove against an older root |
+| Timing correlation (issuance → application) | leaves and receipts are timestamped by blocks | issue credentials in batches (`npm run issue:batch` shuffles the public list so it does not follow the registrar's export order); the historic root lets applicants prove against an older root |
 | Small anonymity set | a proof names the root it used; only leaves before it are candidates | tree depth 16 (65,536); applicants can use a root after a large batch |
 | Issuer issues two credentials to one person (two secrets) | the contract cannot see real-world identity | issuer policy: one active credential per person; revocation epoch (roadmap) |
 | Brute-forcing a commitment | attribute space is small (dates, codes) | 32-byte random salt known only to the holder |
@@ -42,6 +42,9 @@
 | Operator leaks the committed seed to a friend before the friend's credential is issued | the friend could try many secrets offline and pick one with a low ticket | issuer issues one credential per person; roadmap: mix a public randomness beacon into the seed at close |
 | Programme-id squatting | `registerProgram` is first-come for a 32-byte id | blocking only (no data or funds at risk); the notice publishes its id; roadmap: operator-namespaced ids |
 | Demo vs. network | the browser demo runs the compiled circuit logic without proofs or fees | on a Midnight network the same circuits are proven by the proof server; keys are produced by `npm run compile` |
+
+## The demo's live leak scan ("What the chain sees")
+After every call the browser demo decodes every atom of the public ledger state and of that call's public transcript and looks for the applicant's birth date, district, income and valid-until (`src/adapters/simulator/chain-view.ts`). The province and the yes/no flags are not scanned: the rule already makes them public for an eligible applicant, and 0, 1 and 11 occur in any ledger as counters and flags, so a scan for them would report false positives. The contract test AC-3 applies the same decoding to the transcript of `apply`.
 
 ## Disclosure inventory (`disclose()` in the contract)
 | Where | Value | Why it is safe |

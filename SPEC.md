@@ -42,7 +42,7 @@ A Midnight DApp for public benefit applications: the applicant proves **"I meet 
 - Value objects: `YMD` (YYYYMMDD date), `AgeBand` (만 나이 min/max), `RegionCode` (시도 2-digit, 시군구 5-digit).
 - Entities: `Program` (aggregate root: policy, status, capacity, receipts).
 - Domain services: `birthRangeFor(referenceDate, band)`, `explainEligibility(credential, policy)`, `policyFromClause(clause)`.
-- Ports: `EligibilityLedger` (the contract as seen by the application), `CommitmentHasher`.
+- Ports: `EligibilityLedger` (the contract as seen by the application), `CommitmentHasher` (the contract's own `credentialCommitment`, used by UC-7), `RandomSource`.
 
 ## 5. Use cases
 | UC | Actor | Input | Output | Rule |
@@ -53,6 +53,7 @@ A Midnight DApp for public benefit applications: the applicant proves **"I meet 
 | UC-4 close | Operator | program id | status closed | operator only |
 | UC-5 draw | Operator | program id | lowest-ticket receipts selected | operator only, closed (seed revealed), ≤ capacity; `auditDraw` lets anyone re-check |
 | UC-6 claim | Holder | program id | receipt claimed | own receipt, selected |
+| UC-7 issue batch | Issuer | registrar CSV export | shuffled public commitments + one private bundle per holder | every row valid or rejected with its line number; no attribute value in the public output |
 
 ## 6. Acceptance criteria (each → ≥ 1 test)
 - AC-1 Given a deployed contract, When a non-issuer calls `issueCredential`, Then it fails with "Only the issuer can issue credentials".
@@ -77,6 +78,7 @@ A Midnight DApp for public benefit applications: the applicant proves **"I meet 
 - AC-20 (Web3 community grant preset) Given `?preset=grant`, Then the demo registers the synthetic "Web3 community grant" (age 19–34 ∧ Seoul ∧ enrolled student, one grant per person); its applicant A is accepted, applicant B fails exactly one predicate (student) and is refused by the circuit, B's forged credential (student flipped) is refused as not issued, and A's second application is refused as a duplicate. The default preset stays the Korean youth allowance.
 - AC-21 (README first screen) The README, before its first `##` heading, carries: the tagline (identical to `docs/SUBMISSION.md` "Tagline"), the live demo link, a 3-line quick start, the test count, the CI badge, the line `Hackathon entries: Midnight Korea Hackathon 2026, 3rd-Web-Hack` and Apache-2.0; `scripts/check-test-count.mjs` (run in CI) fails if the stated test count differs from the number vitest actually ran.
 - AC-22 (Decks) `docs/deck/JustEnough-deck.pdf` (Midnight, 16:9) and `docs/3rd-web-hack-deck.pdf` (3rd-Web-Hack, 3:2, 7 slides) are committed and every number they print about the build equals the repository's own evidence.
+- AC-23 (Registrar batch issuance, first-pilot path) Given a registrar CSV export (`holder_ref,birth_date,sido,sigungu,student,employed,income_pct,valid_until`), When `issueBatch` runs, Then it returns one public commitment per valid row in shuffled order (the only file to publish) and one private bundle per holder (credential, 32-byte secret, salt); invalid rows are rejected with their line number and nothing is issued for them; the public output contains no `holder_ref` and no attribute value; a bundle, once its commitment is issued, applies successfully on the compiled contract; 1,000 rows take < 5 s.
 
 ## 7. Architecture (dependencies point inward)
 ```
@@ -99,4 +101,4 @@ contract/src/justenough.compact → contract/src/managed (generated) ← src/ada
 - v0.1 2026-09-24 first draft (contract spike compiled on 0.31.1 to validate the language surface before the tests).
 - v0.2 2026-09-24 AC-1..15, layer layout, UI acceptance.
 - v0.3 2026-09-24 mock review → AC-16 auditable draw (seed committed at registration, revealed at close), AC-17 real-network evidence, devnet CI.
-- v0.4 2026-09-24 shared build contract with the 3rd-Web-Hack entry (R1–R10) → AC-18 English UI, AC-19 "What the chain sees" panel with a live leak scan, AC-20 Web3 community grant preset, AC-21 README first screen + test-count check, AC-22 decks in the repo.
+- v0.4 2026-09-24 shared build contract with the 3rd-Web-Hack entry (R1–R10) → AC-18 English UI, AC-19 "What the chain sees" panel with a live leak scan, AC-20 Web3 community grant preset, AC-21 README first screen + test-count check, AC-22 decks in the repo, AC-23 registrar batch issuance (BizDev: the first pilot's issuer path as one command).

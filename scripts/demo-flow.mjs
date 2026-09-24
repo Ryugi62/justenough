@@ -2,7 +2,7 @@
 // Korean and English (youth allowance and the Web3 community grant preset), asserts what the screen
 // says, and saves screenshots (390 px and 1280 px).
 // AC-18: in English runs, every text node and label outside lang="ko" must be free of Hangul.
-// Usage: node scripts/demo-flow.mjs [--video] [--out docs/screenshots] [--only en]
+// Usage: node scripts/demo-flow.mjs [--video] [--out docs/screenshots] [--only en] [--url https://…/ (walk a deployed demo)]
 import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { preview } from 'vite';
@@ -12,6 +12,7 @@ const args = process.argv.slice(2);
 const outDir = args.includes('--out') ? args[args.indexOf('--out') + 1] : 'docs/screenshots';
 const only = args.includes('--only') ? args[args.indexOf('--only') + 1] : undefined;
 const video = args.includes('--video');
+const remote = args.includes('--url') ? args[args.indexOf('--url') + 1] : undefined;
 
 const T = {
   ko: {
@@ -41,8 +42,10 @@ const RUNS = [
   { tag: 'd1280', width: 1280, height: 800, lang: 'en', preset: 'grant', dir: join(outDir, 'grant-en') },
 ].filter((r) => !only || r.lang === only);
 
-const server = await preview({ root: 'web', build: { outDir: '../dist' }, preview: { port: 4173, strictPort: false }, logLevel: 'error' });
-const url = server.resolvedUrls.local[0];
+const server = remote
+  ? undefined
+  : await preview({ root: 'web', build: { outDir: '../dist' }, preview: { port: 4173, strictPort: false }, logLevel: 'error' });
+const url = remote ?? server.resolvedUrls.local[0];
 
 const launch = {};
 if (process.env.PW_CHROMIUM_PATH) launch.executablePath = process.env.PW_CHROMIUM_PATH;
@@ -169,7 +172,7 @@ async function run({ tag, width, height, lang, preset, dir }) {
 const results = [];
 for (const r of RUNS) results.push(await run(r));
 await browser.close();
-server.httpServer.close();
+server?.httpServer.close();
 console.log(JSON.stringify(results, null, 1));
 const bad = results.filter((r) => r.overflow > 0 || r.errors.length || r.hangul.length);
 if (bad.length) {

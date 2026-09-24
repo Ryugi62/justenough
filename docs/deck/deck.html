@@ -180,7 +180,7 @@
   <p class="kicker">품질 · Engineering &amp; QA</p>
   <h2>“개인정보가 원장에 없다”를 말이 아니라 테스트로</h2>
   <div class="cols3" style="margin-top:24px">
-    <div class="card blue"><b class="num">112</b><span>자동 테스트 전부 통과<br/>(회로 27 · 도메인 41 · 앱 11 · 어댑터 8 · 웹 4 · 구조 3 · 문서 17 · 차분 1)</span></div>
+    <div class="card blue"><b class="num">118</b><span>자동 테스트 전부 통과<br/>(회로 27 · 도메인 44 · 앱 11 · 어댑터 11 · 웹 4 · 구조 3 · 문서 17 · 차분 1)</span></div>
     <div class="card blue"><b class="num">2,000</b><span>TS 규칙 ≡ 컴파일된 <code>meetsPolicy</code><br/>경계값 위주 무작위 차분 테스트</span></div>
     <div class="card blue"><b class="num">0</b><span>신청 후 공개 transcript·원장 상태의<br/>모든 원자를 디코딩해 찾은 속성 값</span></div>
     <div class="card"><b class="num">3</b><span>CI 작업: 0.31.1 전체 검증 · 0.34.0 컴파일 · 실제 네트워크 실행</span></div>
@@ -233,6 +233,7 @@
       <p><b>1단계</b> 공모·해커톤 주최: 나이·재학만</p>
       <p><b>2단계</b> 대학 장학: 재학·소득 구간</p>
       <p><b>3단계</b> 지자체 청년 지원금: 거주·취업·소득 (발급기관 = 이미 행정 데이터를 가진 기관, 해시만 발행)</p>
+      <p><b>발급 도구(지금 동작)</b> 학사 CSV → <code>npm run issue:batch</code>: 1,000행 커밋 계산 0.08초, 잘못된 행은 줄 번호로 거절 · 온체인 발급은 건당 17초(devnet 실측) → 일괄 삽입 회로가 다음 단계</p>
       <p style="margin-bottom:0"><b>수익</b> 운영기관 공고당 과금 + 발급 연동 API</p>
     </div>
   </div>
@@ -248,7 +249,7 @@
       <p>• 컨트랙트 6회로 컴파일(0.31.1·0.34.0) + 증명 키 생성</p>
       <p>• 로컬 Midnight 네트워크 실배포·실증명 8건 (CI 반복)</p>
       <p>• 브라우저 데모(지갑 불필요) · 검증 가능한 추첨</p>
-      <p>• 112개 테스트 · 위협 모델 문서</p>
+      <p>• 118개 테스트 · 위협 모델 문서</p>
       <p>• 한국어·영어 화면 · 「체인이 보는 것」 패널: 호출마다 공개 값을 다시 훑어 비공개 값 0건 표시</p>
     </div>
     <div class="card blue">
@@ -267,7 +268,7 @@
   <h1 style="font-size:48px">clone 한 번, 명령 두 줄</h1>
   <pre style="margin-top:28px;font-size:20px">compact update 0.31.1
 git clone https://github.com/Ryugi62/justenough &amp;&amp; cd justenough
-npm ci &amp;&amp; npm run verify     <span class="c"># 컴파일 → 타입체크 → 112 테스트 → 빌드</span>
+npm ci &amp;&amp; npm run verify     <span class="c"># 컴파일 → 타입체크 → 118 테스트 → 빌드</span>
 npm run preview              <span class="c"># 브라우저 데모, 지갑 불필요</span>
 npm run devnet:up &amp;&amp; npm run devnet:e2e   <span class="c"># 실제 네트워크·실제 증명 (Docker)</span></pre>
   <p style="margin-top:28px;font-size:26px"><b>딱 그만큼</b> — 필요한 만큼만 증명하고, 나머지는 내 기기에.</p>
