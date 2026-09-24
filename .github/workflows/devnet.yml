@@ -27,13 +27,32 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run compile
-      - run: npm run devnet:up
+      - name: start the local network (indexer can race the node on a cold runner, so retry)
+        run: |
+          for i in 1 2 3; do
+            if npm run devnet:up; then exit 0; fi
+            echo "::warning::devnet:up attempt $i failed"
+            docker compose -f devnet/compose.yml ps -a || true
+            docker compose -f devnet/compose.yml logs --no-color --tail 80 indexer || true
+            docker compose -f devnet/compose.yml down || true
+            sleep 15
+          done
+          exit 1
       - run: npm run devnet:e2e
       - run: npx vitest run tests/docs/devnet-evidence.test.ts
+      - name: container logs on failure
+        if: failure()
+        run: |
+          mkdir -p logs
+          docker compose -f devnet/compose.yml ps -a > logs/compose-ps.log 2>&1 || true
+          docker compose -f devnet/compose.yml logs --no-color > logs/compose.log 2>&1 || true
+          tail -n 120 logs/compose.log || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: devnet-run
-          path: docs/devnet-run.json
+          path: |
+            docs/devnet-run.json
+            logs/compose*.log
       - if: always()
         run: npm run devnet:down
