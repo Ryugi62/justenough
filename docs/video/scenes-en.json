@@ -1,0 +1,93 @@
+[
+  {
+    "id": "e01",
+    "target": "slide:1",
+    "en": "Public blockchains can't check who qualifies without exposing who you are. JustEnough fixes that on Midnight."
+  },
+  {
+    "id": "e02",
+    "target": "slide:2",
+    "en": "Today a grant or an airdrop either collects ID documents, or gets farmed. LayerZero flagged over eight hundred thousand addresses as potential sybils, and only after the fact."
+  },
+  {
+    "id": "e03",
+    "target": "slide:3",
+    "en": "With JustEnough, your credential stays on your device. From your claim, the chain learns two facts: you are eligible, and it is your first claim."
+  },
+  {
+    "id": "e04",
+    "target": "app",
+    "action": "open",
+    "en": "This is the live demo. The compiled Compact circuits run right in your browser, with no wallet. The scenario is a Web3 community grant."
+  },
+  {
+    "id": "e05",
+    "target": "app",
+    "action": "cta",
+    "en": "An issuer vouches for applicant A once. Only a salted hash goes on the ledger. The values stay on A's device."
+  },
+  {
+    "id": "e06",
+    "target": "app",
+    "action": "cta",
+    "en": "The grant's rule is public: age nineteen to thirty-four, lives in Seoul, enrolled student. One grant per person."
+  },
+  {
+    "id": "e07",
+    "target": "app",
+    "action": "cta",
+    "en": "A checks every condition on their own device,"
+  },
+  {
+    "id": "e08",
+    "target": "app",
+    "action": "cta",
+    "en": "and applies. On the right is what the chain sees: one receipt, called a nullifier. A live scan of the public data finds none of A's private values."
+  },
+  {
+    "id": "e09",
+    "target": "app",
+    "action": "button:Try applying again",
+    "en": "Applying twice gives the same nullifier, so the circuit refuses. The grant still doesn't know who tried."
+  },
+  {
+    "id": "e10",
+    "target": "app",
+    "action": "cta+button:Submit anyway",
+    "en": "Applicant B is not enrolled. Submitting anyway fails: no proof can be made."
+  },
+  {
+    "id": "e11",
+    "target": "app",
+    "action": "button:Change it to “enrolled” and submit",
+    "en": "Rewriting the value to enrolled fails too. The hash no longer matches anything the issuer published."
+  },
+  {
+    "id": "e12",
+    "target": "app",
+    "action": "cta+cta",
+    "en": "At closing, the operator reveals a draw seed it committed before anyone applied. Anyone can recompute who won."
+  },
+  {
+    "id": "e13",
+    "target": "app",
+    "action": "cta+cta",
+    "en": "Only a selected holder can claim. Nobody else's data ever reached the program."
+  },
+  {
+    "id": "e14",
+    "target": "app",
+    "action": "scroll:.card.public",
+    "en": "The same flow ran on a local Midnight network with real zero-knowledge proofs: eight transactions, and zero attribute values in the public state."
+  },
+  {
+    "id": "e15",
+    "target": "slide:4",
+    "en": "Under the hood: one Compact contract with six circuits, one hundred and twelve automated tests, and CI on every push."
+  },
+  {
+    "id": "e16",
+    "target": "slide:7",
+    "en": "Try it without a wallet, at the link below. JustEnough. Prove you qualify, not who you are."
+  }
+]

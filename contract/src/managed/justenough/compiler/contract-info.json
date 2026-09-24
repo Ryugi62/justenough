@@ -1,0 +1,898 @@
+{
+  "compiler-version": "0.31.1",
+  "language-version": "0.23.0",
+  "runtime-version": "0.16.0",
+  "circuits": [
+    {
+      "name": "issuerKey",
+      "pure": true,
+      "proof": false,
+      "arguments": [
+        {
+          "name": "sk",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Bytes",
+        "length": 32
+      }
+    },
+    {
+      "name": "operatorKey",
+      "pure": true,
+      "proof": false,
+      "arguments": [
+        {
+          "name": "sk",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Bytes",
+        "length": 32
+      }
+    },
+    {
+      "name": "holderKey",
+      "pure": true,
+      "proof": false,
+      "arguments": [
+        {
+          "name": "sk",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Bytes",
+        "length": 32
+      }
+    },
+    {
+      "name": "nullifierFor",
+      "pure": true,
+      "proof": false,
+      "arguments": [
+        {
+          "name": "sk",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        },
+        {
+          "name": "programId",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Bytes",
+        "length": 32
+      }
+    },
+    {
+      "name": "drawSeedFor",
+      "pure": true,
+      "proof": false,
+      "arguments": [
+        {
+          "name": "sk",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        },
+        {
+          "name": "programId",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Bytes",
+        "length": 32
+      }
+    },
+    {
+      "name": "seedCommitmentOf",
+      "pure": true,
+      "proof": false,
+      "arguments": [
+        {
+          "name": "seed",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Bytes",
+        "length": 32
+      }
+    },
+    {
+      "name": "drawTicket",
+      "pure": true,
+      "proof": false,
+      "arguments": [
+        {
+          "name": "seed",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        },
+        {
+          "name": "receipt",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Bytes",
+        "length": 32
+      }
+    },
+    {
+      "name": "credentialCommitment",
+      "pure": true,
+      "proof": false,
+      "arguments": [
+        {
+          "name": "c",
+          "type": {
+            "type-name": "Struct",
+            "name": "Credential",
+            "elements": [
+              {
+                "name": "birthDate",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 4294967295
+                }
+              },
+              {
+                "name": "sido",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 255
+                }
+              },
+              {
+                "name": "sigungu",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 4294967295
+                }
+              },
+              {
+                "name": "student",
+                "type": {
+                  "type-name": "Boolean"
+                }
+              },
+              {
+                "name": "employed",
+                "type": {
+                  "type-name": "Boolean"
+                }
+              },
+              {
+                "name": "incomePct",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 65535
+                }
+              },
+              {
+                "name": "validUntil",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 4294967295
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "holder",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        },
+        {
+          "name": "salt",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Bytes",
+        "length": 32
+      }
+    },
+    {
+      "name": "meetsPolicy",
+      "pure": true,
+      "proof": false,
+      "arguments": [
+        {
+          "name": "c",
+          "type": {
+            "type-name": "Struct",
+            "name": "Credential",
+            "elements": [
+              {
+                "name": "birthDate",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 4294967295
+                }
+              },
+              {
+                "name": "sido",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 255
+                }
+              },
+              {
+                "name": "sigungu",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 4294967295
+                }
+              },
+              {
+                "name": "student",
+                "type": {
+                  "type-name": "Boolean"
+                }
+              },
+              {
+                "name": "employed",
+                "type": {
+                  "type-name": "Boolean"
+                }
+              },
+              {
+                "name": "incomePct",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 65535
+                }
+              },
+              {
+                "name": "validUntil",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 4294967295
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "p",
+          "type": {
+            "type-name": "Struct",
+            "name": "EligibilityPolicy",
+            "elements": [
+              {
+                "name": "minBirthDate",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 4294967295
+                }
+              },
+              {
+                "name": "maxBirthDate",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 4294967295
+                }
+              },
+              {
+                "name": "sido",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 255
+                }
+              },
+              {
+                "name": "sigungu",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 4294967295
+                }
+              },
+              {
+                "name": "requireStudent",
+                "type": {
+                  "type-name": "Boolean"
+                }
+              },
+              {
+                "name": "requireUnemployed",
+                "type": {
+                  "type-name": "Boolean"
+                }
+              },
+              {
+                "name": "maxIncomePct",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 65535
+                }
+              },
+              {
+                "name": "referenceDate",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 4294967295
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Boolean"
+      }
+    },
+    {
+      "name": "issueCredential",
+      "pure": false,
+      "proof": true,
+      "arguments": [
+        {
+          "name": "commitment",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Tuple",
+        "types": [
+        ]
+      }
+    },
+    {
+      "name": "registerProgram",
+      "pure": false,
+      "proof": true,
+      "arguments": [
+        {
+          "name": "programId",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        },
+        {
+          "name": "policy",
+          "type": {
+            "type-name": "Struct",
+            "name": "EligibilityPolicy",
+            "elements": [
+              {
+                "name": "minBirthDate",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 4294967295
+                }
+              },
+              {
+                "name": "maxBirthDate",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 4294967295
+                }
+              },
+              {
+                "name": "sido",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 255
+                }
+              },
+              {
+                "name": "sigungu",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 4294967295
+                }
+              },
+              {
+                "name": "requireStudent",
+                "type": {
+                  "type-name": "Boolean"
+                }
+              },
+              {
+                "name": "requireUnemployed",
+                "type": {
+                  "type-name": "Boolean"
+                }
+              },
+              {
+                "name": "maxIncomePct",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 65535
+                }
+              },
+              {
+                "name": "referenceDate",
+                "type": {
+                  "type-name": "Uint",
+                  "maxval": 4294967295
+                }
+              }
+            ]
+          }
+        },
+        {
+          "name": "capacity",
+          "type": {
+            "type-name": "Uint",
+            "maxval": 4294967295
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Tuple",
+        "types": [
+        ]
+      }
+    },
+    {
+      "name": "apply",
+      "pure": false,
+      "proof": true,
+      "arguments": [
+        {
+          "name": "programId",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Bytes",
+        "length": 32
+      }
+    },
+    {
+      "name": "closeProgram",
+      "pure": false,
+      "proof": true,
+      "arguments": [
+        {
+          "name": "programId",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Tuple",
+        "types": [
+        ]
+      }
+    },
+    {
+      "name": "selectApplicant",
+      "pure": false,
+      "proof": true,
+      "arguments": [
+        {
+          "name": "programId",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        },
+        {
+          "name": "receipt",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Tuple",
+        "types": [
+        ]
+      }
+    },
+    {
+      "name": "claimBenefit",
+      "pure": false,
+      "proof": true,
+      "arguments": [
+        {
+          "name": "programId",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        }
+      ],
+      "result-type": {
+        "type-name": "Bytes",
+        "length": 32
+      }
+    }
+  ],
+  "witnesses": [
+    {
+      "name": "localSecret",
+      "arguments": [
+      ],
+      "result type": {
+        "type-name": "Bytes",
+        "length": 32
+      }
+    },
+    {
+      "name": "heldCredential",
+      "arguments": [
+      ],
+      "result type": {
+        "type-name": "Struct",
+        "name": "Credential",
+        "elements": [
+          {
+            "name": "birthDate",
+            "type": {
+              "type-name": "Uint",
+              "maxval": 4294967295
+            }
+          },
+          {
+            "name": "sido",
+            "type": {
+              "type-name": "Uint",
+              "maxval": 255
+            }
+          },
+          {
+            "name": "sigungu",
+            "type": {
+              "type-name": "Uint",
+              "maxval": 4294967295
+            }
+          },
+          {
+            "name": "student",
+            "type": {
+              "type-name": "Boolean"
+            }
+          },
+          {
+            "name": "employed",
+            "type": {
+              "type-name": "Boolean"
+            }
+          },
+          {
+            "name": "incomePct",
+            "type": {
+              "type-name": "Uint",
+              "maxval": 65535
+            }
+          },
+          {
+            "name": "validUntil",
+            "type": {
+              "type-name": "Uint",
+              "maxval": 4294967295
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "credentialSalt",
+      "arguments": [
+      ],
+      "result type": {
+        "type-name": "Bytes",
+        "length": 32
+      }
+    },
+    {
+      "name": "credentialPath",
+      "arguments": [
+        {
+          "name": "commitment",
+          "type": {
+            "type-name": "Bytes",
+            "length": 32
+          }
+        }
+      ],
+      "result type": {
+        "type-name": "Struct",
+        "name": "MerkleTreePath",
+        "elements": [
+          {
+            "name": "leaf",
+            "type": {
+              "type-name": "Bytes",
+              "length": 32
+            }
+          },
+          {
+            "name": "path",
+            "type": {
+              "type-name": "Vector",
+              "length": 16,
+              "type": {
+                "type-name": "Struct",
+                "name": "MerkleTreePathEntry",
+                "elements": [
+                  {
+                    "name": "sibling",
+                    "type": {
+                      "type-name": "Struct",
+                      "name": "MerkleTreeDigest",
+                      "elements": [
+                        {
+                          "name": "field",
+                          "type": {
+                            "type-name": "Field"
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  {
+                    "name": "goes_left",
+                    "type": {
+                      "type-name": "Boolean"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "contracts": [
+  ],
+  "ledger": [
+    {
+      "name": "issuer",
+      "index": 0,
+      "exported": true,
+      "storage": "Cell",
+      "type": {
+        "type-name": "Bytes",
+        "length": 32
+      }
+    },
+    {
+      "name": "credentials",
+      "index": 1,
+      "exported": true,
+      "storage": "HistoricMerkleTree",
+      "depth": 16,
+      "type": {
+        "type-name": "Bytes",
+        "length": 32
+      }
+    },
+    {
+      "name": "issuedCount",
+      "index": 2,
+      "exported": true,
+      "storage": "Counter"
+    },
+    {
+      "name": "programs",
+      "index": 3,
+      "exported": true,
+      "storage": "Map",
+      "key": {
+        "type-name": "Bytes",
+        "length": 32
+      },
+      "value": {
+        "type-name": "Struct",
+        "name": "Program",
+        "elements": [
+          {
+            "name": "policy",
+            "type": {
+              "type-name": "Struct",
+              "name": "EligibilityPolicy",
+              "elements": [
+                {
+                  "name": "minBirthDate",
+                  "type": {
+                    "type-name": "Uint",
+                    "maxval": 4294967295
+                  }
+                },
+                {
+                  "name": "maxBirthDate",
+                  "type": {
+                    "type-name": "Uint",
+                    "maxval": 4294967295
+                  }
+                },
+                {
+                  "name": "sido",
+                  "type": {
+                    "type-name": "Uint",
+                    "maxval": 255
+                  }
+                },
+                {
+                  "name": "sigungu",
+                  "type": {
+                    "type-name": "Uint",
+                    "maxval": 4294967295
+                  }
+                },
+                {
+                  "name": "requireStudent",
+                  "type": {
+                    "type-name": "Boolean"
+                  }
+                },
+                {
+                  "name": "requireUnemployed",
+                  "type": {
+                    "type-name": "Boolean"
+                  }
+                },
+                {
+                  "name": "maxIncomePct",
+                  "type": {
+                    "type-name": "Uint",
+                    "maxval": 65535
+                  }
+                },
+                {
+                  "name": "referenceDate",
+                  "type": {
+                    "type-name": "Uint",
+                    "maxval": 4294967295
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "name": "operator",
+            "type": {
+              "type-name": "Bytes",
+              "length": 32
+            }
+          },
+          {
+            "name": "status",
+            "type": {
+              "type-name": "Enum",
+              "name": "ProgramStatus",
+              "elements": [
+                "open",
+                "closed"
+              ]
+            }
+          },
+          {
+            "name": "capacity",
+            "type": {
+              "type-name": "Uint",
+              "maxval": 4294967295
+            }
+          },
+          {
+            "name": "seedCommitment",
+            "type": {
+              "type-name": "Bytes",
+              "length": 32
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "applications",
+      "index": 4,
+      "exported": true,
+      "storage": "Map",
+      "key": {
+        "type-name": "Bytes",
+        "length": 32
+      },
+      "value": {
+        "type-name": "Map",
+        "key": {
+          "type-name": "Bytes",
+          "length": 32
+        },
+        "value": {
+          "type-name": "Enum",
+          "name": "ApplicationStatus",
+          "elements": [
+            "submitted",
+            "selected",
+            "claimed"
+          ]
+        }
+      }
+    },
+    {
+      "name": "applicantCount",
+      "index": 5,
+      "exported": true,
+      "storage": "Map",
+      "key": {
+        "type-name": "Bytes",
+        "length": 32
+      },
+      "value": {
+        "type-name": "Counter"
+      }
+    },
+    {
+      "name": "selectedCount",
+      "index": 6,
+      "exported": true,
+      "storage": "Map",
+      "key": {
+        "type-name": "Bytes",
+        "length": 32
+      },
+      "value": {
+        "type-name": "Counter"
+      }
+    },
+    {
+      "name": "drawSeeds",
+      "index": 7,
+      "exported": true,
+      "storage": "Map",
+      "key": {
+        "type-name": "Bytes",
+        "length": 32
+      },
+      "value": {
+        "type-name": "Bytes",
+        "length": 32
+      }
+    }
+  ]
+}

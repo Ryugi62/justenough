@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<title>JustEnough — Midnight Korea Hackathon 2026</title>
+<style>
+  @page { size: 1280px 720px; margin: 0; }
+  :root { --blue: #3182f6; --blue-weak: #e8f3ff; --blue-text: #1b64da; --text: #191f28; --t2: #4e5968; --t3: #6b7684; --soft: #f2f4f6; --line: #e5e8eb; --no: #d22030; --ok: #1c8b4f; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { font-family: -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif; color: var(--text); -webkit-font-smoothing: antialiased; }
+  .slide { width: 1280px; height: 720px; padding: 64px 80px; position: relative; overflow: hidden; page-break-after: always; background: #fff; }
+  .slide:last-child { page-break-after: auto; }
+  .n { position: absolute; right: 48px; bottom: 32px; font-size: 14px; color: var(--t3); }
+  .kicker { font-size: 18px; font-weight: 700; color: var(--blue-text); margin: 0 0 12px; }
+  h1 { font-size: 56px; line-height: 1.2; margin: 0; letter-spacing: -1px; }
+  h2 { font-size: 40px; line-height: 1.25; margin: 0 0 8px; letter-spacing: -0.6px; }
+  .en { color: var(--t3); font-size: 18px; margin: 0 0 28px; }
+  p, li { font-size: 22px; line-height: 1.5; color: var(--t2); }
+  .big { font-size: 120px; font-weight: 800; color: var(--blue); line-height: 1; letter-spacing: -3px; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .cols3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .card { background: var(--soft); border-radius: 20px; padding: 24px 28px; }
+  .card.blue { background: var(--blue-weak); }
+  .card b.num { display: block; font-size: 44px; color: var(--blue); letter-spacing: -1px; }
+  .card span { font-size: 18px; color: var(--t2); }
+  table { border-collapse: collapse; width: 100%; font-size: 18px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--t3); font-weight: 600; font-size: 15px; }
+  code, pre { font-family: ui-monospace, Menlo, monospace; }
+  pre { background: #0f1720; color: #e6edf3; border-radius: 16px; padding: 20px 24px; font-size: 15px; line-height: 1.5; margin: 0; }
+  pre .k { color: #7ab7ff; } pre .c { color: #8b949e; } pre .s { color: #a5d6a7; } pre .hl { background: #1f3a5f; display: inline-block; width: 100%; }
+  .shots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+  .shots figure { margin: 0; }
+  .shots img { width: 100%; height: 470px; object-fit: cover; object-position: top; border-radius: 16px; border: 1px solid var(--line); }
+  .shots figcaption { font-size: 16px; color: var(--t2); margin-top: 8px; text-align: center; }
+  .pill { display: inline-block; background: var(--blue-weak); color: var(--blue-text); font-weight: 700; font-size: 16px; padding: 4px 12px; border-radius: 999px; margin: 0 6px 6px 0; }
+  .no { color: var(--no); font-weight: 700; } .ok { color: var(--ok); font-weight: 700; }
+  .flow { display: grid; grid-template-columns: 1fr 60px 1fr 60px 1fr; align-items: center; gap: 0; }
+  .arrow { text-align: center; font-size: 36px; color: var(--t3); }
+  .role { background: var(--soft); border-radius: 20px; padding: 22px; min-height: 250px; }
+  .role h3 { margin: 0 0 8px; font-size: 24px; }
+  .role p { font-size: 18px; margin: 6px 0; }
+  .ledger { grid-column: 1 / -1; margin-top: 20px; background: var(--blue-weak); border-radius: 20px; padding: 18px 24px; font-size: 19px; color: var(--blue-text); font-weight: 700; }
+  .title-slide { background: linear-gradient(160deg, #ffffff 55%, #e8f3ff); }
+  .foot { position: absolute; left: 80px; bottom: 56px; font-size: 18px; color: var(--t3); }
+</style>
+</head>
+<body>
+
+<section class="slide title-slide">
+  <p class="kicker">Midnight Korea Hackathon 2026 · Privacy-first DApp</p>
+  <h1>딱 그만큼<br/>등본 대신, 자격만 증명해요</h1>
+  <p class="en" style="font-size:26px;margin-top:18px">JustEnough — prove eligibility, not identity.</p>
+  <p style="max-width:900px">청년 지원금·장학금·공모에 신청할 때 서류를 내는 대신, “이 공고의 자격 조건을 충족한다”는 사실만 Midnight 위에서 영지식 증명으로 제출합니다.</p>
+  <p class="foot">github.com/Ryugi62/justenough · Apache-2.0 · Compact 0.31.1 / 0.34.0</p>
+  <span class="n">1</span>
+</section>
+
+<section class="slide">
+  <p class="kicker">문제 · Problem</p>
+  <h2>기관에 필요한 건 예/아니오 3개인데,<br/>서류 3장이 통째로 넘어가요</h2>
+  <p class="en">An institution needs three yes/no answers and receives three whole documents.</p>
+  <div class="cols3">
+    <div class="card"><b class="num">등본</b><span>필요: “서울 거주”<br/>넘어감: 전체 주소·세대원</span></div>
+    <div class="card"><b class="num">재학·고용</b><span>필요: “재학 아님·미취업”<br/>넘어감: 학교·학적·이력</span></div>
+    <div class="card"><b class="num">소득 서류</b><span>필요: “중위소득 150% 이하”<br/>넘어감: 보험료·가구 소득 금액</span></div>
+  </div>
+  <p style="margin-top:28px">개인정보 보호법은 목적에 필요한 <b>최소한</b>만 수집하라고 합니다(제3조·제16조). 그런데 신청자 대부분은 선정되지 않고, 그들의 서류는 확인·보관 대상으로 남습니다.</p>
+  <span class="n">2</span>
+</section>
+
+<section class="slide">
+  <p class="kicker">해법 · Idea</p>
+  <h2>심사를 없애는 게 아니라, 서류 이동을 없앤다</h2>
+  <p class="en">Keep the eligibility check. Remove the documents.</p>
+  <div class="flow">
+    <div class="role"><h3>발급기관 Issuer</h3><p>이미 기록을 가진 기관</p><p>자격 증명의 <b>해시 1개</b>만 원장에 올림</p><p style="color:var(--t3)">issueCredential</p></div>
+    <div class="arrow">→</div>
+    <div class="role" style="background:var(--blue-weak)"><h3>지원자 Applicant</h3><p>증명서는 <b>내 기기에만</b></p><p>“발급된 내 증명이 이 공고 조건을 충족한다”를 <b>증명 1개</b>로 제출</p><p style="color:var(--t3)">apply → 익명 영수증</p></div>
+    <div class="arrow">→</div>
+    <div class="role"><h3>운영기관 Operator</h3><p>공고 조건은 원래 공개 → 그대로 원장에</p><p>누가 신청했는지 모른 채 <b>영수증 추첨</b></p><p style="color:var(--t3)">closeProgram · selectApplicant</p></div>
+    <div class="ledger">선정자만 수령 단계에서 “이 영수증이 내 것”을 증명(claimBenefit) → 탈락자의 개인정보는 애초에 기관에 없다</div>
+  </div>
+  <p style="font-size:17px;margin-top:14px">기존 대안인 “기관이 행정 데이터를 직접 조회”해도 기관은 <b>모든 신청자의 원본 기록</b>을 봅니다. 딱 그만큼에서는 기관이 <b>예/아니오와 익명 영수증</b>만 봅니다.</p>
+  <span class="n">3</span>
+</section>
+
+<section class="slide">
+  <p class="kicker">Midnight 활용 · Dual ledger</p>
+  <h2>공개할 것과 숨길 것을 원장 설계로 가른다</h2>
+  <p class="en">Public ledger vs. private state — split on purpose.</p>
+  <table>
+    <tr><th>데이터</th><th>위치</th><th>누가 보나</th></tr>
+    <tr><td>생년월일·거주 시도/시군구·재학·취업·소득 %·유효기간</td><td>지원자 private state (witness)</td><td class="ok">지원자만</td></tr>
+    <tr><td>32바이트 비밀키·salt</td><td>지원자 private state</td><td class="ok">지원자만</td></tr>
+    <tr><td>증명 커밋 <code>hash(증명, 지원자키, salt)</code></td><td>공개 <code>HistoricMerkleTree&lt;16&gt;</code></td><td>누구나 — salt 없이는 역산 불가</td></tr>
+    <tr><td>어느 잎을 썼는지</td><td>어디에도 없음 (멤버십 증명)</td><td class="ok">아무도</td></tr>
+    <tr><td>공고 조건 (나이 구간·지역·플래그·소득 상한·기준일)</td><td>공개 <code>programs</code></td><td>누구나 — 원래 공고문</td></tr>
+    <tr><td>영수증 <code>hash(domain, programId, secret)</code>·상태</td><td>공개 <code>applications</code></td><td>누구나 — 사람·다른 공고와 연결 불가</td></tr>
+  </table>
+  <span class="n">4</span>
+</section>
+
+<section class="slide">
+  <p class="kicker">핵심 회로 · apply</p>
+  <div class="cols" style="grid-template-columns: 1.35fr 1fr; align-items:start">
+<pre><span class="k">export circuit</span> apply(programId: Bytes&lt;32&gt;): Bytes&lt;32&gt; {
+  <span class="k">const</span> id = disclose(programId);
+  <span class="k">const</span> program = programs.lookup(id);
+  assert(program.status == ProgramStatus.open, <span class="s">"…closed"</span>);
+  <span class="k">const</span> sk = localSecret();            <span class="c">// private</span>
+  <span class="k">const</span> cred = heldCredential();       <span class="c">// private</span>
+  <span class="k">const</span> commitment = credentialCommitment(
+      cred, holderKey(sk), credentialSalt());
+  <span class="k">const</span> path = credentialPath(commitment);
+<span class="hl">  assert(disclose(path.leaf == commitment), …);</span>
+<span class="hl">  assert(credentials.checkRoot(disclose(
+      merkleTreePathRoot&lt;16, Bytes&lt;32&gt;&gt;(path))), …);</span>
+<span class="hl">  assert(disclose(meetsPolicy(cred, program.policy)), …);</span>
+  <span class="k">const</span> receipt = disclose(nullifierFor(sk, id));
+  assert(!applications.lookup(id).member(receipt), …);
+  applications.lookup(id).insert(receipt, submitted);
+  applicantCount.lookup(id).increment(1);
+  <span class="k">return</span> receipt;
+}</pre>
+    <div>
+      <h2 style="font-size:32px">회로가 증명하는 것</h2>
+      <p>① 이 증명은 발급기관 트리에 있다 (어느 잎인지는 숨김)</p>
+      <p>② 그 증명은 <b>내 것</b>이다 (내 키로 다시 계산한 커밋 = 잎)</p>
+      <p>③ 그 값이 공고 조건을 충족한다</p>
+      <p>④ 처음 신청이다 (공고별 영수증)</p>
+      <p style="color:var(--t3);font-size:18px">공개되는 것: 트리 루트 하나, 항상 참인 불리언, 영수증 해시</p>
+    </div>
+  </div>
+  <span class="n">5</span>
+</section>
+
+<section class="slide">
+  <p class="kicker">데모 · 지갑 없이 브라우저에서 컴파일된 회로 실행</p>
+  <div class="shots">
+    <figure><img src="../screenshots/m390-1-issue.png"/><figcaption>① 발급: 원장엔 해시 1개</figcaption></figure>
+    <figure><img src="../screenshots/m390-3b-applied.png"/><figcaption>② 신청: 넘어간 개인정보 0개</figcaption></figure>
+    <figure><img src="../screenshots/m390-4b-forged.png"/><figcaption>③ 값 조작 → 회로가 거절</figcaption></figure>
+    <figure><img src="../screenshots/m390-5b-drawn.png"/><figcaption>④ 약속한 시드로 21건 중 5건, 누구나 검산</figcaption></figure>
+  </div>
+  <span class="n">6</span>
+</section>
+
+<section class="slide">
+  <p class="kicker">보안 · 거짓 신청은 증명이 안 만들어진다</p>
+  <h2>공격 7가지, 전부 회로가 거절 (테스트로 고정)</h2>
+  <table>
+    <tr><th>시도</th><th>회로의 답</th><th>테스트</th></tr>
+    <tr><td>발급된 적 없는 값으로 신청</td><td class="no">Credential was not issued by the issuer</td><td>AC-5</td></tr>
+    <tr><td>발급된 증명의 소득만 낮춰서 신청</td><td class="no">Credential was not issued by the issuer</td><td>AC-5</td></tr>
+    <tr><td>남의 머클 경로 빌려 쓰기</td><td class="no">Merkle path does not belong to this credential</td><td>AC-6</td></tr>
+    <tr><td>조건 하나만 미달 (나이·지역·취업·소득·유효기간 각각)</td><td class="no">Credential does not meet the eligibility policy</td><td>AC-7</td></tr>
+    <tr><td>같은 공고 두 번 신청</td><td class="no">Already applied to this program</td><td>AC-4</td></tr>
+    <tr><td>운영기관이 아닌 사람의 마감·추첨</td><td class="no">Only the program operator can do this</td><td>AC-9</td></tr>
+    <tr><td>선정 안 된 영수증으로 수령</td><td class="no">This application was not selected</td><td>AC-10</td></tr>
+  </table>
+  <span class="n">7</span>
+</section>
+<section class="slide">
+  <p class="kicker">공정성 · Auditable draw</p>
+  <h2>추첨도 증명한다: 약속한 시드로만 뽑는다</h2>
+  <p class="en">The seed is committed before anyone applies and revealed at closing; anyone can recompute the winners.</p>
+  <div class="cols3" style="margin-top:12px">
+    <div class="card"><b class="num" style="font-size:30px">① 공고 등록</b><span><code>seed = hash(공고 id, 기관 비밀키)</code><br/>원장엔 <b>seedCommitment</b>만 — 이때 신청은 0건이라 결과를 보고 고를 수 없음</span></div>
+    <div class="card"><b class="num" style="font-size:30px">② 마감</b><span><code>closeProgram</code>이 시드를 공개하고<br/>회로가 <code>hash(seed) == commitment</code>를 검사</span></div>
+    <div class="card blue"><b class="num" style="font-size:30px">③ 누구나 검산</b><span><code>ticket = hash(seed, 영수증)</code><br/>가장 작은 정원 수만큼이 선정 — <code>auditDraw</code>가 다른 선택을 잡아냄(테스트)</span></div>
+  </div>
+  <p style="margin-top:22px">청년 주택·지원금처럼 <b>추첨이 곧 결과</b>인 공공 사업에서, 기관도 신청자도 결과를 조작할 수 없고 누구나 공개 원장만으로 확인합니다. 남는 위험(시드 사전 유출 + 공모)은 공개 난수 비콘 결합으로 로드맵에 명시.</p>
+  <span class="n">8</span>
+</section>
+
+
+<section class="slide">
+  <p class="kicker">품질 · Engineering &amp; QA</p>
+  <h2>“개인정보가 원장에 없다”를 말이 아니라 테스트로</h2>
+  <div class="cols3" style="margin-top:24px">
+    <div class="card blue"><b class="num">112</b><span>자동 테스트 전부 통과<br/>(회로 27 · 도메인 41 · 앱 11 · 어댑터 8 · 웹 4 · 구조 3 · 문서 17 · 차분 1)</span></div>
+    <div class="card blue"><b class="num">2,000</b><span>TS 규칙 ≡ 컴파일된 <code>meetsPolicy</code><br/>경계값 위주 무작위 차분 테스트</span></div>
+    <div class="card blue"><b class="num">0</b><span>신청 후 공개 transcript·원장 상태의<br/>모든 원자를 디코딩해 찾은 속성 값</span></div>
+    <div class="card"><b class="num">3</b><span>CI 작업: 0.31.1 전체 검증 · 0.34.0 컴파일 · 실제 네트워크 실행</span></div>
+    <div class="card"><b class="num">40초 이내</b><span>새 클론에서 <code>npm ci &amp;&amp; npm run verify</code><br/>실측 32.5초·38.7초 (npm 캐시 있음, 다른 작업 부하 중)</span></div>
+    <div class="card"><b class="num">만 나이</b><span>2027–2028 매일 × 경계 ±3일<br/>2월 29일 포함 전수 검증</span></div>
+  </div>
+  <span class="n">9</span>
+</section>
+<section class="slide">
+  <p class="kicker">실제 네트워크 · Real proofs</p>
+  <h2>같은 흐름을 실제 Midnight 네트워크에서 증명으로 돌렸다</h2>
+  <p class="en">Local Midnight network (midnight-node 1.0.0 · indexer 4.3.3 · proof-server 8.1.0), compactc 0.31.1 — docs/devnet-run.json</p>
+  <table style="font-size:17px" id="devnet-table">
+    <tr><th>단계</th><th>결과</th><th>블록</th><th>증명+제출</th></tr>
+    <!-- rows filled from docs/devnet-run.json by scripts/build-deck.mjs -->
+  </table>
+  <p style="margin-top:14px" id="devnet-summary">트랜잭션 <b>8건</b>, 인덱서 공개 상태에서 찾은 속성 값 <b>0건</b>. CI 워크플로(devnet.yml)가 푸시마다 같은 실행을 반복하도록 구성했습니다(<code>npm run devnet:up &amp;&amp; npm run devnet:e2e</code>).</p>
+  <span class="n">10</span>
+</section>
+
+
+<section class="slide">
+  <p class="kicker">실데이터 · 실제 공고 조항 → 회로 조건</p>
+  <h2>실제 공고 7건을 그대로 번역했다</h2>
+  <table style="font-size:16px">
+    <tr><th>공고</th><th>조항 (원문)</th><th>회로 조건</th><th>회로 밖 (숨기지 않고 표시)</th></tr>
+    <tr><td>2026 국방 AI 경진대회</td><td>대한민국 국적의 청년, 만 19~34세</td><td>나이 19–34</td><td>국적 → 발급 범위</td></tr>
+    <tr><td>청년 오픈이노베이션 챌린지</td><td>만 34세 이하 대학(원)생 및 청년 예비창업자</td><td>나이 ≤34 ∧ 재학</td><td>예비창업자 경로(OR)</td></tr>
+    <tr><td>인천관광 혁신아이디어 공모전</td><td>인천시민 및 인천 소재 학교 재학생·회사 임직원</td><td>시도 = 28</td><td>학교·직장 소재지</td></tr>
+    <tr><td>서초창업스테이션 컨설팅</td><td>(예비)창업자 * 서초구 거주자 … 우대</td><td>시군구 = 11650 (우대 트랙)</td><td>창업자 여부</td></tr>
+    <tr><td>Web3 블록체인 AI융합 해커톤</td><td>국내 대학 학부 재·휴학생 2~4인 팀</td><td>재학</td><td>학부/휴학, 팀 인원</td></tr>
+    <tr><td>AI기반 통일 아이디어 공모전</td><td>국내 대학(원)생(충남/충북/세종/대전 소재)</td><td>재학</td><td>4개 시도 집합 조건</td></tr>
+    <tr><td>그린리모델링 콘텐츠 공모전</td><td>만 19세 이상 일반 국민</td><td>나이 ≥19</td><td>국민 여부, 팀 인원</td></tr>
+  </table>
+  <p style="font-size:16px;margin-top:10px">원문·URL·확인일은 <code>src/domain/notices.ts</code>. 데모의 “청년 구직 활동 지원금”은 가상 공고로 표시합니다.</p>
+  <span class="n">11</span>
+</section>
+
+<section class="slide">
+  <p class="kicker">도입 경로 · Business</p>
+  <h2>공고는 두 달에 700건, 자격 확인은 매번 수작업</h2>
+  <div class="cols" style="margin-top:20px">
+    <div>
+      <p><b>누가 쓰나</b> — 청년 정책을 운영하는 지자체·공공기관, 대학 장학 부서, 공모전·해커톤 주최</p>
+      <p><b>왜 지금 Midnight</b> — 신청 수·추첨 결과는 <b>공개 감사</b>가 필요하고, 신청자 값은 <b>비공개</b>여야 한다. 이중 원장이 정확히 그 모양</p>
+      <p><b>팀이 겪는 문제</b> — 8~9월 두 달간 우리가 추적한 공고 702건: 지원금 222 · 공모 174 · 장학 58 · 대출 78</p>
+    </div>
+    <div class="card">
+      <p style="margin-top:0"><b>첫 파일럿</b> 대학 장학: 발급기관 = 학사 시스템, 운영기관 = 장학팀 — 같은 기관이라 외부 연동 0</p>
+      <p><b>1단계</b> 공모·해커톤 주최: 나이·재학만</p>
+      <p><b>2단계</b> 대학 장학: 재학·소득 구간</p>
+      <p><b>3단계</b> 지자체 청년 지원금: 거주·취업·소득 (발급기관 = 이미 행정 데이터를 가진 기관, 해시만 발행)</p>
+      <p style="margin-bottom:0"><b>수익</b> 운영기관 공고당 과금 + 발급 연동 API</p>
+    </div>
+  </div>
+  <span class="n">12</span>
+</section>
+
+<section class="slide">
+  <p class="kicker">한계와 다음 · Roadmap</p>
+  <h2>정직하게: 지금 되는 것과 다음 단계</h2>
+  <div class="cols">
+    <div class="card">
+      <p style="margin-top:0"><b>지금</b></p>
+      <p>• 컨트랙트 6회로 컴파일(0.31.1·0.34.0) + 증명 키 생성</p>
+      <p>• 로컬 Midnight 네트워크 실배포·실증명 8건 (CI 반복)</p>
+      <p>• 브라우저 데모(지갑 불필요) · 검증 가능한 추첨</p>
+      <p>• 112개 테스트 · 위협 모델 문서</p>
+      <p>• 한국어·영어 화면 · 「체인이 보는 것」 패널: 호출마다 공개 값을 다시 훑어 비공개 값 0건 표시</p>
+    </div>
+    <div class="card blue">
+      <p style="margin-top:0"><b>다음</b></p>
+      <p>1. Preprod 배포 (스크립트 준비 완료, 테스트넷 토큰만 남음)</p>
+      <p>2. 지갑(Lace) 연결 모드 — 같은 포트, midnight-js 어댑터</p>
+      <p>3. 발급기관 어댑터·다중 발급기관, 집합·OR 조건, 폐기, 난수 비콘</p>
+    </div>
+  </div>
+  <p style="margin-top:24px">남는 위험: 발급 시점과 신청 시점의 연관, 익명 집합 크기(루트 이전 발급 수) — 배치 발급과 과거 루트 증명으로 완화.</p>
+  <span class="n">13</span>
+</section>
+
+<section class="slide title-slide">
+  <p class="kicker">직접 확인하기</p>
+  <h1 style="font-size:48px">clone 한 번, 명령 두 줄</h1>
+  <pre style="margin-top:28px;font-size:20px">compact update 0.31.1
+git clone https://github.com/Ryugi62/justenough &amp;&amp; cd justenough
+npm ci &amp;&amp; npm run verify     <span class="c"># 컴파일 → 타입체크 → 112 테스트 → 빌드</span>
+npm run preview              <span class="c"># 브라우저 데모, 지갑 불필요</span>
+npm run devnet:up &amp;&amp; npm run devnet:e2e   <span class="c"># 실제 네트워크·실제 증명 (Docker)</span></pre>
+  <p style="margin-top:28px;font-size:26px"><b>딱 그만큼</b> — 필요한 만큼만 증명하고, 나머지는 내 기기에.</p>
+  <span class="n">14</span>
+</section>
+
+</body>
+</html>

@@ -1,0 +1,65 @@
+{
+  "name": "justenough",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@midnight-ntwrk/compact-runtime": "0.16.0"
+  },
+  "devDependencies": {
+    "@midnight-ntwrk/midnight-js-contracts": "4.1.1",
+    "@midnight-ntwrk/midnight-js-http-client-proof-provider": "4.1.1",
+    "@midnight-ntwrk/midnight-js-indexer-public-data-provider": "4.1.1",
+    "@midnight-ntwrk/midnight-js-level-private-state-provider": "4.1.1",
+    "@midnight-ntwrk/midnight-js-network-id": "4.1.1",
+    "@midnight-ntwrk/midnight-js-node-zk-config-provider": "4.1.1",
+    "@midnight-ntwrk/midnight-js-protocol": "4.1.1",
+    "@midnight-ntwrk/midnight-js-types": "4.1.1",
+    "@midnight-ntwrk/midnight-js-utils": "4.1.1",
+    "@midnight-ntwrk/testkit-js": "4.1.1",
+    "@midnight-ntwrk/wallet-sdk": "1.2.0",
+    "@types/node": "22.18.0",
+    "@types/ws": "8.18.1",
+    "pino": "9.14.0",
+    "pino-pretty": "13.1.3",
+    "playwright": "1.57.0",
+    "rxjs": "7.8.2",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3",
+    "vite": "7.3.6",
+    "vite-plugin-wasm": "3.5.0",
+    "vitest": "3.2.4",
+    "ws": "8.18.3"
+  },
+  "description": "Prove you qualify, not who you are: apply to a grant or public programme with one zero-knowledge proof on Midnight. No documents, no personal values on-chain, one claim per person.",
+  "scripts": {
+    "compile": "compact compile contract/src/justenough.compact contract/src/managed/justenough",
+    "compile:fast": "compact compile --skip-zk contract/src/justenough.compact contract/src/managed/justenough",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "build": "vite build",
+    "dev": "vite",
+    "preview": "vite preview",
+    "e2e": "npm run build && node scripts/demo-flow.mjs",
+    "verify": "npm run compile && npm run typecheck && npm run test && npm run build",
+    "devnet:up": "docker compose -f devnet/compose.yml up -d --wait",
+    "devnet:down": "docker compose -f devnet/compose.yml down",
+    "devnet:e2e": "tsx scripts/devnet-e2e.ts"
+  },
+  "keywords": [
+    "midnight",
+    "midnightntwrk",
+    "compact",
+    "zero-knowledge",
+    "privacy",
+    "eligibility",
+    "korea"
+  ],
+  "overrides": {
+    "@midnight-ntwrk/onchain-runtime-v3": "3.0.0"
+  }
+}

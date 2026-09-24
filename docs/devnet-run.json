@@ -1,0 +1,95 @@
+{
+  "network": "local devnet (midnight-node 1.0.0, indexer 4.3.3, proof-server 8.1.0)",
+  "compiler": "compactc 0.31.1",
+  "ranAt": "2026-09-24T02:43:32.265Z",
+  "totalSeconds": 154,
+  "contractAddress": "e9fd0fd8a6b06f77a76912dd6fc09bef7953edd8f30dc8212bbebed75d056d89",
+  "steps": [
+    {
+      "step": "deploy",
+      "contractAddress": "e9fd0fd8a6b06f77a76912dd6fc09bef7953edd8f30dc8212bbebed75d056d89",
+      "txId": "0028593e2a2b013b85b636eb4e35e078953cddc8083e953f970e85d1edb86116d7",
+      "blockHeight": 385
+    },
+    {
+      "step": "issueCredential(a)",
+      "txId": "00aada61cbbcf05e8ac1e92048863bd30430580e42bfa806f5c61e7ea442ef7460",
+      "blockHeight": 388,
+      "provingAndSubmitMs": 17110,
+      "commitment": "e44dc75f3794ea7742dcc0f4861e0d7a5adc43653601dc0b177806b7649ef309"
+    },
+    {
+      "step": "issueCredential(b)",
+      "txId": "0043a002f600e45075e90e9e756e6e1f9555cd1c1ca985564222f184cb9188e81b",
+      "blockHeight": 391,
+      "provingAndSubmitMs": 17391,
+      "commitment": "ab7f7ee2ae7f5b69cf18ded3da7d05f19bee1a8f389d9918c9cb87f468afc301"
+    },
+    {
+      "step": "registerProgram",
+      "txId": "004c4e47ea14cef974936db253dcfd4d629dc2e36fefb531fea41015bfb7b30b84",
+      "blockHeight": 394,
+      "provingAndSubmitMs": 18757
+    },
+    {
+      "step": "apply(A)",
+      "txId": "00ccba186e33afa6b45d0e9af62217e7024c4b2647b0626300232dcc42af41d830",
+      "blockHeight": 398,
+      "provingAndSubmitMs": 24061,
+      "receipt": "833205ca273d2ca86e3a9efda8390290e9a170d08049edddeee435b441ff5286"
+    },
+    {
+      "step": "apply(B)",
+      "refused": "Unexpected error executing scoped transaction '<unnamed>': Error: failed assert: Credential does not meet the eligibility policy"
+    },
+    {
+      "step": "apply(A) again",
+      "refused": "Unexpected error executing scoped transaction '<unnamed>': Error: failed assert: Already applied to this program"
+    },
+    {
+      "step": "closeProgram",
+      "txId": "000df0a8790d659241dfa7197ffe1ca62093acf4ef8c2bc9b09c1f19faac58ba4a",
+      "blockHeight": 401,
+      "revealedSeed": "578302123c08e097e461d5ff98af71082293a8c2b46d00262172b889a88777b9",
+      "commitmentMatches": true
+    },
+    {
+      "step": "selectApplicant",
+      "txId": "008dcf499ab7051992f6543036459310658578abe8ed8ec2a5f1cda06f9db6a891",
+      "blockHeight": 404,
+      "lowestTicket": "37bc2d5d40038e0f2070db4c3ca16f8b824be8d02e4657e8d47c9756a3af0696",
+      "isApplicantA": true
+    },
+    {
+      "step": "claimBenefit(A)",
+      "txId": "001559ebaa61761e022f693f794dc2c188c31cd596270736cb92f21a037401b3a2",
+      "blockHeight": 407,
+      "provingAndSubmitMs": 17416
+    },
+    {
+      "step": "indexer state",
+      "issuedCount": 2,
+      "applicants": 1,
+      "selected": 1,
+      "receipts": [
+        {
+          "receipt": "833205ca273d2ca86e3a9efda8390290e9a170d08049edddeee435b441ff5286",
+          "status": 2
+        }
+      ],
+      "policy": {
+        "minBirthDate": "19910925",
+        "maxBirthDate": "20070924",
+        "sido": "11",
+        "sigungu": "0",
+        "requireStudent": "false",
+        "requireUnemployed": "true",
+        "maxIncomePct": "150",
+        "referenceDate": "20260924"
+      },
+      "publicAtomsScanned": 28,
+      "attributeValuesFoundInPublicState": 0,
+      "leaked": []
+    }
+  ]
+}

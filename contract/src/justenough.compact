@@ -1,0 +1,251 @@
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2026 JustEnough contributors
+//
+// JustEnough — prove eligibility, not identity.
+//
+// An issuer (the authority that already holds residence / enrolment / income
+// records) publishes only a salted commitment of each applicant's credential
+// into a public Merkle tree. A program operator publishes an eligibility policy.
+// The applicant proves, in zero knowledge, that a credential in the tree meets
+// the policy. The public ledger records a per-program nullifier (the receipt)
+// and a counter. The birth date, region, enrolment, employment and income
+// values are circuit inputs only and do not appear on the ledger.
+
+pragma language_version >= 0.23;
+
+import CompactStandardLibrary;
+
+// ---------------------------------------------------------------------------
+// Domain types (names match SPEC.md §3 and src/domain/*.ts)
+// ---------------------------------------------------------------------------
+
+// Attributes the issuer attests to. Stays in the applicant's private state.
+export struct Credential {
+  birthDate: Uint<32>;   // YYYYMMDD
+  sido: Uint<8>;         // 2-digit province code (행정표준코드 시도), e.g. 11 = Seoul
+  sigungu: Uint<32>;     // 5-digit district code (시군구), e.g. 11650 = Seocho-gu
+  student: Boolean;      // currently enrolled (재학·휴학 포함 여부는 발급기관 정책)
+  employed: Boolean;     // currently employed (고용보험 가입 기준)
+  incomePct: Uint<16>;   // household income as % of the national median income
+  validUntil: Uint<32>;  // YYYYMMDD, last day the credential is valid
+}
+
+// Public eligibility rule of one program, translated from the notice text.
+export struct EligibilityPolicy {
+  minBirthDate: Uint<32>;     // inclusive, derived from the maximum age (만 나이)
+  maxBirthDate: Uint<32>;     // inclusive, derived from the minimum age (만 나이)
+  sido: Uint<8>;              // 0 = any province
+  sigungu: Uint<32>;          // 0 = any district
+  requireStudent: Boolean;
+  requireUnemployed: Boolean;
+  maxIncomePct: Uint<16>;     // 0 = no income cap
+  referenceDate: Uint<32>;    // YYYYMMDD, the date the notice evaluates age on
+}
+
+export enum ProgramStatus { open, closed }
+
+export enum ApplicationStatus { submitted, selected, claimed }
+
+export struct Program {
+  policy: EligibilityPolicy;
+  operator: Bytes<32>;        // operatorKey(secret) of the institution running it
+  status: ProgramStatus;
+  capacity: Uint<32>;         // number of benefit slots
+  seedCommitment: Bytes<32>;  // draw seed committed at registration, before any receipt exists
+}
+
+struct CommitmentInput {
+  domain: Bytes<32>;
+  credential: Credential;
+  holder: Bytes<32>;
+  salt: Bytes<32>;
+}
+
+// ---------------------------------------------------------------------------
+// Public ledger
+// ---------------------------------------------------------------------------
+
+export sealed ledger issuer: Bytes<32>;
+export ledger credentials: HistoricMerkleTree<16, Bytes<32>>;
+export ledger issuedCount: Counter;
+export ledger programs: Map<Bytes<32>, Program>;
+export ledger applications: Map<Bytes<32>, Map<Bytes<32>, ApplicationStatus>>;
+export ledger applicantCount: Map<Bytes<32>, Counter>;
+export ledger selectedCount: Map<Bytes<32>, Counter>;
+export ledger drawSeeds: Map<Bytes<32>, Bytes<32>>;   // revealed when the programme closes
+
+// ---------------------------------------------------------------------------
+// Private inputs (implemented in contract/src/witnesses.ts)
+// ---------------------------------------------------------------------------
+
+witness localSecret(): Bytes<32>;
+witness heldCredential(): Credential;
+witness credentialSalt(): Bytes<32>;
+witness credentialPath(commitment: Bytes<32>): MerkleTreePath<16, Bytes<32>>;
+
+// ---------------------------------------------------------------------------
+// Pure helpers — exported so off-chain code hashes exactly like the circuit
+// ---------------------------------------------------------------------------
+
+export pure circuit issuerKey(sk: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<2, Bytes<32>>>([pad(32, "justenough:issuer:v1"), sk]);
+}
+
+export pure circuit operatorKey(sk: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<2, Bytes<32>>>([pad(32, "justenough:operator:v1"), sk]);
+}
+
+export pure circuit holderKey(sk: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<2, Bytes<32>>>([pad(32, "justenough:holder:v1"), sk]);
+}
+
+// One receipt per (holder, program). Unlinkable across programs.
+export pure circuit nullifierFor(sk: Bytes<32>, programId: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<3, Bytes<32>>>([pad(32, "justenough:nullifier:v1"), programId, sk]);
+}
+
+// Draw seed of a programme: fixed by the operator secret and the programme id, i.e. before
+// anyone applies. Only its commitment is published until the programme closes.
+export pure circuit drawSeedFor(sk: Bytes<32>, programId: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<3, Bytes<32>>>([pad(32, "justenough:draw-seed:v1"), programId, sk]);
+}
+
+export pure circuit seedCommitmentOf(seed: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<2, Bytes<32>>>([pad(32, "justenough:seed-commit:v1"), seed]);
+}
+
+// Lottery ticket of a receipt. Selected receipts must be the `capacity` lowest tickets;
+// anyone can recompute this from the public seed and the public receipts.
+export pure circuit drawTicket(seed: Bytes<32>, receipt: Bytes<32>): Bytes<32> {
+  return persistentHash<Vector<3, Bytes<32>>>([pad(32, "justenough:draw-ticket:v1"), seed, receipt]);
+}
+
+export pure circuit credentialCommitment(c: Credential, holder: Bytes<32>, salt: Bytes<32>): Bytes<32> {
+  return persistentHash<CommitmentInput>(CommitmentInput {
+    domain: pad(32, "justenough:credential:v1"),
+    credential: c,
+    holder: holder,
+    salt: salt
+  });
+}
+
+export pure circuit meetsPolicy(c: Credential, p: EligibilityPolicy): Boolean {
+  const ageOk = c.birthDate >= p.minBirthDate && c.birthDate <= p.maxBirthDate;
+  const sidoOk = p.sido == 0 || c.sido == p.sido;
+  const sigunguOk = p.sigungu == 0 || c.sigungu == p.sigungu;
+  const studentOk = !p.requireStudent || c.student;
+  const employmentOk = !p.requireUnemployed || !c.employed;
+  const incomeOk = p.maxIncomePct == 0 || c.incomePct <= p.maxIncomePct;
+  const validOk = c.validUntil >= p.referenceDate;
+  return ageOk && sidoOk && sigunguOk && studentOk && employmentOk && incomeOk && validOk;
+}
+
+// ---------------------------------------------------------------------------
+// Circuits
+// ---------------------------------------------------------------------------
+
+constructor() {
+  issuer = disclose(issuerKey(localSecret()));
+}
+
+// Issuer: add a credential commitment. Only a 32-byte hash reaches the ledger.
+export circuit issueCredential(commitment: Bytes<32>): [] {
+  assert(disclose(issuerKey(localSecret()) == issuer), "Only the issuer can issue credentials");
+  credentials.insert(disclose(commitment));
+  issuedCount.increment(1);
+}
+
+// Operator: publish a program and its eligibility policy (the policy is public,
+// exactly like the notice it comes from).
+export circuit registerProgram(programId: Bytes<32>, policy: EligibilityPolicy, capacity: Uint<32>): [] {
+  const id = disclose(programId);
+  const p = disclose(policy);
+  assert(!programs.member(id), "Program already exists");
+  assert(p.minBirthDate <= p.maxBirthDate, "Empty age band");
+  assert(disclose(capacity) > 0, "Capacity must be positive");
+  const sk = localSecret();
+  programs.insert(id, Program {
+    policy: p,
+    operator: disclose(operatorKey(sk)),
+    status: ProgramStatus.open,
+    capacity: disclose(capacity),
+    seedCommitment: disclose(seedCommitmentOf(drawSeedFor(sk, id)))
+  });
+  applications.insert(id, default<Map<Bytes<32>, ApplicationStatus>>);
+  applicantCount.insert(id, default<Counter>);
+  selectedCount.insert(id, default<Counter>);
+}
+
+// Applicant: prove "a credential issued to me meets this policy" and file a receipt.
+export circuit apply(programId: Bytes<32>): Bytes<32> {
+  const id = disclose(programId);
+  assert(programs.member(id), "Unknown program");
+  const program = programs.lookup(id);
+  assert(program.status == ProgramStatus.open, "Program is closed");
+
+  const sk = localSecret();
+  const cred = heldCredential();
+  const commitment = credentialCommitment(cred, holderKey(sk), credentialSalt());
+  const path = credentialPath(commitment);
+  assert(disclose(path.leaf == commitment), "Merkle path does not belong to this credential");
+  assert(credentials.checkRoot(disclose(merkleTreePathRoot<16, Bytes<32>>(path))),
+         "Credential was not issued by the issuer");
+  assert(disclose(meetsPolicy(cred, program.policy)), "Credential does not meet the eligibility policy");
+
+  const receipt = disclose(nullifierFor(sk, id));
+  assert(!applications.lookup(id).member(receipt), "Already applied to this program");
+  applications.lookup(id).insert(receipt, ApplicationStatus.submitted);
+  applicantCount.lookup(id).increment(1);
+  return receipt;
+}
+
+circuit requireOperator(id: Bytes<32>): [] {
+  assert(disclose(operatorKey(localSecret()) == programs.lookup(id).operator),
+         "Only the program operator can do this");
+}
+
+// Operator: stop accepting applications and reveal the draw seed committed at registration.
+export circuit closeProgram(programId: Bytes<32>): [] {
+  const id = disclose(programId);
+  assert(programs.member(id), "Unknown program");
+  requireOperator(id);
+  const p = programs.lookup(id);
+  assert(p.status == ProgramStatus.open, "Program is already closed");
+  const seed = disclose(drawSeedFor(localSecret(), id));
+  assert(seedCommitmentOf(seed) == p.seedCommitment, "Seed does not match the registration commitment");
+  drawSeeds.insert(id, seed);
+  programs.insert(id, Program {
+    policy: p.policy,
+    operator: p.operator,
+    status: ProgramStatus.closed,
+    capacity: p.capacity,
+    seedCommitment: p.seedCommitment
+  });
+}
+
+// Operator: select an anonymous receipt. The operator never learns who is behind it; the
+// expected selection (lowest drawTicket values) is publicly recomputable — see src/domain/draw.ts.
+export circuit selectApplicant(programId: Bytes<32>, receipt: Bytes<32>): [] {
+  const id = disclose(programId);
+  const r = disclose(receipt);
+  assert(programs.member(id), "Unknown program");
+  requireOperator(id);
+  const p = programs.lookup(id);
+  assert(p.status == ProgramStatus.closed, "Close the program before selecting");
+  assert(applications.lookup(id).member(r), "Unknown receipt");
+  assert(applications.lookup(id).lookup(r) == ApplicationStatus.submitted, "Receipt was already selected");
+  assert(selectedCount.lookup(id).read() < p.capacity, "All slots are already filled");
+  applications.lookup(id).insert(r, ApplicationStatus.selected);
+  selectedCount.lookup(id).increment(1);
+}
+
+// Applicant: prove "that selected receipt is mine" and mark it claimed.
+export circuit claimBenefit(programId: Bytes<32>): Bytes<32> {
+  const id = disclose(programId);
+  assert(programs.member(id), "Unknown program");
+  const receipt = disclose(nullifierFor(localSecret(), id));
+  assert(applications.lookup(id).member(receipt), "No application from this holder");
+  assert(applications.lookup(id).lookup(receipt) == ApplicationStatus.selected, "This application was not selected");
+  applications.lookup(id).insert(receipt, ApplicationStatus.claimed);
+  return receipt;
+}

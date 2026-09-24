@@ -1,0 +1,71 @@
+1
+00:00:00,000 --> 00:00:04,750
+JustEnough — a Midnight DApp that proves eligibility instead of handing over documents.
+
+2
+00:00:05,652 --> 00:00:18,082
+The institution needs three yes/no answers — residence, employment, income — but receives three whole documents. Most applicants are not selected, yet their papers stay behind.
+
+3
+00:00:18,985 --> 00:00:29,145
+We keep the check and remove the documents: the issuer publishes one hash, the applicant submits one proof, the operator draws anonymous receipts.
+
+4
+00:00:30,046 --> 00:00:40,676
+Midnight's dual ledger does the split: values and secrets stay on the applicant's device; the ledger holds hashes, the public rule and receipts.
+
+5
+00:00:41,578 --> 00:00:47,858
+The live demo. This page runs the compiled Compact circuits right in the browser — no wallet needed.
+
+6
+00:00:48,761 --> 00:00:56,861
+The issuer issues applicant A's credential: one hash on the public ledger, the values only on A's device.
+
+7
+00:00:57,760 --> 00:01:05,800
+The programme rule is public text anyway, so it goes on the ledger as is. Seven real notices were translated the same way.
+
+8
+00:01:06,700 --> 00:01:10,190
+A checks all seven conditions on their own device,
+
+9
+00:01:11,090 --> 00:01:23,900
+and applies with a single proof. Zero personal fields reach the institution. The "What the chain sees" panel shows one receipt hash, and a live re-scan of the public data finds none of A's private values.
+
+10
+00:01:24,801 --> 00:01:29,591
+Applying twice produces the same receipt, so the circuit refuses.
+
+11
+00:01:30,495 --> 00:01:35,165
+B is employed. If B submits anyway, no proof can be produced.
+
+12
+00:01:36,067 --> 00:01:41,977
+Rewriting the value to 'unemployed' fails too: the hash no longer matches anything the issuer published.
+
+13
+00:01:42,878 --> 00:01:58,298
+At closing the operator reveals the draw seed it committed before anyone applied. The 5 lowest tickets of 21 receipts win, anyone can recompute it, and the operator still doesn't know who is who.
+
+14
+00:01:59,198 --> 00:02:06,638
+Only A, who was selected, proves the receipt is theirs and claims. Rejected applicants' data never reached the institution.
+
+15
+00:02:07,541 --> 00:02:19,441
+The same flow ran on a local Midnight network with real proofs: eight transactions, the seed matched its commitment, zero attribute values in the indexer's public state.
+
+16
+00:02:20,343 --> 00:02:25,053
+Seven cheating attempts, all refused by the circuit and pinned by tests.
+
+17
+00:02:25,955 --> 00:02:34,725
+112 tests, a 2,000-case differential test, compilation on two compiler versions, and the real-network run — all wired into CI.
+
+18
+00:02:35,626 --> 00:02:42,506
+Clone once, run two commands, see for yourself. JustEnough — prove only what is needed.

@@ -1,0 +1,39 @@
+name: Devnet (real proofs)
+
+# Deploys the contract to a throw-away local Midnight network (node + indexer + proof server)
+# and runs the full lifecycle with real ZK proofs, then re-checks the recorded evidence.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  devnet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: midnightntwrk/setup-compact-action@836895c8fffbbea6bd986af2b17e8941ff29d1f8
+        with:
+          compact-version: '0.31.1'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run compile
+      - run: npm run devnet:up
+      - run: npm run devnet:e2e
+      - run: npx vitest run tests/docs/devnet-evidence.test.ts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: devnet-run
+          path: docs/devnet-run.json
+      - if: always()
+        run: npm run devnet:down

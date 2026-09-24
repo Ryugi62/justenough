@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: compile (0.31.1) · typecheck · test · build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: midnightntwrk/setup-compact-action@836895c8fffbbea6bd986af2b17e8941ff29d1f8
+        with:
+          compact-version: '0.31.1'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run verify
+      - name: stated test count equals the real run (README, submission text, deck)
+        run: node scripts/check-test-count.mjs
+      - name: generated contract matches the committed one
+        run: git diff --exit-code -- contract/src/managed/justenough/contract
+
+  compile-latest:
+    name: compile only (0.34.0)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: midnightntwrk/setup-compact-action@836895c8fffbbea6bd986af2b17e8941ff29d1f8
+        with:
+          compact-version: '0.34.0'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: compact compile --skip-zk contract/src/justenough.compact /tmp/justenough-0.34
