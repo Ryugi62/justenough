@@ -7,7 +7,7 @@
   {
     "id": "e02",
     "target": "slide:2",
-    "en": "Today a grant or an airdrop either collects ID documents, or gets farmed. LayerZero flagged over eight hundred thousand addresses as potential sybils, and only after the fact."
+    "en": "Today a grant or an airdrop either collects ID documents, or gets farmed. LayerZero flagged over eight hundred thousand addresses as potential sybils."
   },
   {
     "id": "e03",
@@ -18,7 +18,7 @@
     "id": "e04",
     "target": "app",
     "action": "open",
-    "en": "This is the live demo. The compiled Compact circuits run right in your browser, with no wallet. The scenario is a Web3 community grant."
+    "en": "Now the live demo. The compiled Compact circuits run in your browser, with no wallet. The scenario is a Web3 community grant."
   },
   {
     "id": "e05",

@@ -24,7 +24,7 @@ Hackathon entries: Midnight Korea Hackathon 2026, 3rd-Web-Hack. Written from scr
 > **등본 대신, 자격만 증명해요.** 청년 지원금·장학금·공모에 신청할 때 주민등록등본·재학증명서·소득 서류를 내는 대신, “이 공고의 자격 조건을 충족한다”는 사실만 Midnight 위에서 영지식 증명으로 제출합니다. 기관은 서류도, 개인 값도 받지 않고 익명 영수증만 받아 추첨합니다. 선정되지 않은 사람의 개인정보는 애초에 기관에 없습니다.
 
 - **Decks:** Midnight Korea Hackathon (Korean, 14 slides) [`docs/deck/JustEnough-deck.pdf`](docs/deck/JustEnough-deck.pdf) · 3rd-Web-Hack (English, 7 slides) [`docs/3rd-web-hack-deck.pdf`](docs/3rd-web-hack-deck.pdf)
-- **Videos** (TTS narration, burned-in captions): Korean with English captions [`docs/video/JustEnough-demo.mp4`](docs/video/JustEnough-demo.mp4) · English [`docs/video/JustEnough-demo-en.mp4`](docs/video/JustEnough-demo-en.mp4)
+- **Videos** (TTS narration, burned-in captions): Korean with English captions [`docs/video/JustEnough-demo.mp4`](docs/video/JustEnough-demo.mp4) · English [`docs/video/JustEnough-demo-en.mp4`](docs/video/JustEnough-demo-en.mp4) · [on YouTube (English, 1:59)](https://youtu.be/NfYMF86oyBA)
 - **Real network:** the full lifecycle ran on a local Midnight network with real proofs — 8 transactions, 0 attribute values in the indexer's public state ([`docs/devnet-run.json`](docs/devnet-run.json), re-run by CI)
 
 | 1. Issue | 3. Apply | 4. Cheating is refused | 5. Anonymous draw |
