@@ -40,7 +40,37 @@ jobs:
             sleep 15
           done
           exit 1
-      - run: npm run devnet:e2e
+      # The genesis DUST is valued at the latest indexed block's timestamp, so while the indexer is
+      # still at block 0 every fee balance fails with "Insufficient Funds: could not balance dust"
+      # (midnightntwrk/midnight-faucet-api#88; seen here twice on 2026-09-25). Wait until it is past
+      # genesis, and retry the walk (3 tries) while DUST is still short.
+      - name: wait until the indexer is past genesis
+        run: |
+          for i in $(seq 1 90); do
+            h=$(curl -s -X POST -H 'content-type: application/json' \
+              --data '{"query":"{ block { height } }"}' http://127.0.0.1:8088/api/v4/graphql \
+              | jq -r '.data.block.height // 0' 2>/dev/null || echo 0)
+            echo "indexer height ${h:-0}"
+            if [ "${h:-0}" -ge 2 ]; then exit 0; fi
+            sleep 2
+          done
+          echo "::error::indexer stayed at genesis for 180 s"
+          exit 1
+      - name: full lifecycle with real proofs
+        shell: bash
+        run: |
+          mkdir -p logs
+          for i in 1 2 3; do
+            set +e
+            npm run devnet:e2e 2>&1 | tee logs/devnet-e2e.log
+            code=${PIPESTATUS[0]}
+            set -e
+            if [ "$code" = 0 ]; then exit 0; fi
+            grep -q 'Insufficient Funds' logs/devnet-e2e.log || exit "$code"
+            echo "::warning::devnet:e2e attempt $i: DUST not generated yet, waiting 20 s"
+            sleep 20
+          done
+          exit 1
       - run: npx vitest run tests/docs/devnet-evidence.test.ts
       - name: container logs on failure
         if: failure()
@@ -56,5 +86,6 @@ jobs:
           path: |
             docs/devnet-run.json
             logs/compose*.log
+            logs/devnet-e2e.log
       - if: always()
         run: npm run devnet:down
