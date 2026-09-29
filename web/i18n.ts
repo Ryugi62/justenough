@@ -251,7 +251,7 @@ const ko: Messages = {
   seedRevealedAtClose: '마감 때 공개',
   seedRevealed: '공개된 추첨 시드',
   auditLine: (ok, n) => `${ok ? '✓' : '✕'} 공개 시드로 누구나 다시 계산한 결과 = 선정된 ${n}건 ${ok ? '일치' : '불일치'}`,
-  seedFixedNote: '시드는 신청이 하나도 없을 때 정해져서, 기관이 결과를 보고 고를 수 없어요.',
+  seedFixedNote: '시드는 신청이 하나도 없을 때 봉인돼요. 다르게 뽑으면 누구나 다시 계산해 잡아내요.',
   formulaSummary: '계산식',
   formulaBody: (cap) =>
     `<code>ticket = hash(seed, 영수증)</code> 값이 가장 작은 ${cap}건이 선정돼요. 시드는 <code>hash(공고 id, 기관 비밀키)</code>로 공고 등록 순간에 고정되고, 그 해시만 먼저 원장에 올라가요.`,
@@ -408,7 +408,7 @@ const en: Messages = {
   seedRevealedAtClose: 'revealed at close',
   seedRevealed: 'revealed draw seed',
   auditLine: (ok, n) => `${ok ? '✓' : '✕'} Anyone can recompute it from the public seed: ${n} selected, ${ok ? 'match' : 'mismatch'}`,
-  seedFixedNote: 'The seed was fixed before any application existed, so the operator cannot pick winners after seeing who applied.',
+  seedFixedNote: 'The seed was sealed before any application existed. Pick differently, and anyone can recompute the draw and catch it.',
   formulaSummary: 'Formula',
   formulaBody: (cap) =>
     `The ${cap} lowest values of <code>ticket = hash(seed, receipt)</code> win. The seed is <code>hash(programme id, operator secret)</code>, fixed at registration; only its hash goes on the ledger first.`,
