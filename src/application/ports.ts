@@ -41,9 +41,9 @@ export interface HolderPort {
   claim(id: Hex): Promise<Hex>;
 }
 
-/** The contract's own `credentialCommitment(credential, holderKey(secret), salt)`, computed off-chain. */
+/** The contract's own `credentialCommitment(credential, holderKey, salt)`, computed off-chain from the holder's public key. */
 export interface CommitmentHasher {
-  commitment(credential: Credential, holderSecret: Hex, salt: Hex): Hex;
+  commitment(credential: Credential, holderKey: Hex, salt: Hex): Hex;
 }
 
 /** 32 random bytes as hex (a CSPRNG in production, deterministic in tests). */

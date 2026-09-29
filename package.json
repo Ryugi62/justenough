@@ -49,7 +49,8 @@
     "devnet:up": "docker compose -f devnet/compose.yml up -d --wait",
     "devnet:down": "docker compose -f devnet/compose.yml down",
     "devnet:e2e": "tsx scripts/devnet-e2e.ts",
-    "issue:batch": "tsx scripts/issue-batch.ts"
+    "issue:batch": "tsx scripts/issue-batch.ts",
+    "holder:key": "tsx scripts/holder-key.ts"
   },
   "keywords": [
     "midnight",

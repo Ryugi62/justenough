@@ -113,13 +113,14 @@ Age is 만 나이: `birthRangeFor(referenceDate, {minAge, maxAge})` turns "만 1
 
 ## Issuer path for a first pilot (registrar batch)
 
-The first pilot we propose is a university scholarship: the registrar (학사 시스템) is the issuer and the scholarship office is the operator, so no outside integration is needed. The registrar exports one CSV row per student and runs one command:
+The first pilot we propose is a university scholarship: the registrar (학사 시스템) is the issuer and the scholarship office is the operator, so no outside integration is needed. Because both sit in the same university, the registrar must never hold a student's secret — otherwise it could recompute every receipt. So each student makes the secret on their own device and hands in only its public key:
 
 ```bash
-npm run issue:batch -- docs/registrar-sample.csv out/   # synthetic sample, 5 rows
+npm run holder:key                                        # on the student's device: keep `secret`, hand in `holder_key`
+npm run issue:batch -- docs/registrar-sample.csv out/     # registrar; synthetic sample, 5 rows (last column = holder_key)
 ```
 
-It writes `out/commitments.json` — the only file to publish (one `issueCredential` per entry, in shuffled order so the list does not follow the export) — and `out/holders/<ref>.json`, one private bundle per student (credential, 32-byte secret, salt) to deliver through the registrar's own portal. Rows that fail validation (impossible date, district outside its province, duplicate student reference, …) are rejected with their line number and not issued. Measured on 2026-09-24: 1,000 rows → commitments in 79–83 ms off-chain (3 runs); on-chain, each `issueCredential` took 17.1–17.4 s to prove and submit on the local devnet (`docs/devnet-run.json`), so a batch-insert circuit is on the roadmap.
+The registrar's CSV carries that `holder_key` column. `issue:batch` writes `out/commitments.json` — the only file to publish (one `issueCredential` per entry, in shuffled order so the list does not follow the export) — and `out/holders/<ref>.json`, one private bundle per student (credential, salt, the holder key it is bound to; **no secret**) to deliver through the registrar's own portal. The student combines it with the secret that never left their device. Duplicate student references and duplicate holder keys are rejected (one credential per person). Rows that fail validation (impossible date, district outside its province, duplicate student reference or holder key, malformed holder key, …) are rejected with their line number and not issued. Measured on 2026-09-24: 1,000 rows → commitments in 79–83 ms off-chain (3 runs); on-chain, each `issueCredential` took 17.1–17.4 s to prove and submit on the local devnet (`docs/devnet-run.json`), so a batch-insert circuit is on the roadmap.
 
 ## Architecture
 

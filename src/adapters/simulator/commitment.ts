@@ -5,9 +5,12 @@ import type { CommitmentHasher, RandomSource } from '../../application/ports';
 import { bytesToHex, hexToBytes, toContractCredential } from './mapping';
 
 export const contractCommitmentHasher: CommitmentHasher = {
-  commitment: (credential, holderSecret, salt) =>
-    bytesToHex(pureCircuits.credentialCommitment(toContractCredential(credential), pureCircuits.holderKey(hexToBytes(holderSecret)), hexToBytes(salt))),
+  commitment: (credential, holderKey, salt) =>
+    bytesToHex(pureCircuits.credentialCommitment(toContractCredential(credential), hexToBytes(holderKey), hexToBytes(salt))),
 };
+
+/** Run on the holder's device: the public key to hand the registrar. The secret never leaves the device. */
+export const holderKeyOf = (holderSecret: string): string => bytesToHex(pureCircuits.holderKey(hexToBytes(holderSecret)));
 
 export const cryptoRandom: RandomSource = {
   bytes32: () => bytesToHex(globalThis.crypto.getRandomValues(new Uint8Array(32))),

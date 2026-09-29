@@ -3,7 +3,7 @@
 ## Parties and trust
 | Party | Holds | Trusted for |
 |---|---|---|
-| Issuer | issuer secret; the authoritative records (off-chain) | attesting attributes correctly; issuing **one** credential per person; keeping the salt only with the holder |
+| Issuer | issuer secret; the authoritative records (off-chain); each holder's public `holderKey` | attesting attributes correctly; issuing **one** credential per person; keeping the salt only with the holder. It never holds a holder secret (`holder_key` column, `npm run holder:key` on the holder's device), so it cannot recompute receipts even when it sits in the same institution as the operator |
 | Operator | operator secret for one programme | publishing the notice's rule faithfully; drawing fairly (the draw itself is public and auditable per receipt) |
 | Applicant | 32-byte secret, credential, salt | nothing — every claim is checked by the circuit |
 | Observer | the public ledger | nothing |
@@ -40,6 +40,8 @@
 | Witness code lies | witnesses are untrusted input to the circuit | every witness output is constrained: secret → keys, credential+salt → commitment → tree, path leaf equality |
 | Operator ignores the draw and pays someone else | payment is off-chain | selection status is public per receipt; a claim needs the selected receipt's secret |
 | Operator leaks the committed seed to a friend before the friend's credential is issued | the friend could try many secrets offline and pick one with a low ticket | issuer issues one credential per person; roadmap: mix a public randomness beacon into the seed at close |
+| Operator grinds its own secret / programme id so a friend's known receipt gets a low ticket | the operator chooses both inputs of `drawSeedFor` and could search offline if it knows a friend's receipt in advance (receipts appear only when the friend applies, but a colluding friend can hand theirs over) | the selection is public and auditable, not prevented; roadmap: mix a value unknown at registration (a public randomness beacon or a post-close block hash) into the seed, and enforce the k lowest tickets in-circuit |
+| Anonymity set is what the issuer can compute | the issuer knows every credential, so it knows who satisfies a programme's rule | only matters when few holders qualify; roadmap: refuse to open a programme whose rule fewer than k issued credentials satisfy |
 | Programme-id squatting | `registerProgram` is first-come for a 32-byte id | blocking only (no data or funds at risk); the notice publishes its id; roadmap: operator-namespaced ids |
 | Demo vs. network | the browser demo runs the compiled circuit logic without proofs or fees | on a Midnight network the same circuits are proven by the proof server; keys are produced by `npm run compile` |
 

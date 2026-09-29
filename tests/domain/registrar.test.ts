@@ -1,4 +1,6 @@
 // AC-23 — a registrar's CSV export becomes credentials; every bad row is rejected with its line number.
+// The holder_key column is the holder's own public key (holderKey(secret), made on the holder's device): the
+// registrar never sees the secret, so it cannot recompute receipts.
 import { describe, expect, it } from 'vitest';
 import { parseRegistrarCsv, REGISTRAR_HEADER } from '../../src/domain/registrar';
 import { ymd } from '../../src/domain/dates';
@@ -7,30 +9,32 @@ const H = REGISTRAR_HEADER.join(',');
 
 describe('parseRegistrarCsv', () => {
   it('turns valid rows into credentials, keeping the registrar reference apart', () => {
-    const { records, errors } = parseRegistrarCsv(`${H}\nS-001,1999-04-17,11,11620,Y,N,120,2027-03-31\n\nS-002,2001-12-01,28,28110,true,false,80,2027-02-28\n`);
+    const { records, errors } = parseRegistrarCsv(`${H}\nS-001,1999-04-17,11,11620,Y,N,120,2027-03-31,aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n\nS-002,2001-12-01,28,28110,true,false,80,2027-02-28,BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB\n`);
     expect(errors).toEqual([]);
     expect(records).toEqual([
-      { line: 2, holderRef: 'S-001', credential: { birthDate: ymd(1999, 4, 17), sido: 11, sigungu: 11620, student: true, employed: false, incomePct: 120, validUntil: ymd(2027, 3, 31) } },
-      { line: 4, holderRef: 'S-002', credential: { birthDate: ymd(2001, 12, 1), sido: 28, sigungu: 28110, student: true, employed: false, incomePct: 80, validUntil: ymd(2027, 2, 28) } },
+      { line: 2, holderRef: 'S-001', holderKey: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', credential: { birthDate: ymd(1999, 4, 17), sido: 11, sigungu: 11620, student: true, employed: false, incomePct: 120, validUntil: ymd(2027, 3, 31) } },
+      { line: 4, holderRef: 'S-002', holderKey: 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb', credential: { birthDate: ymd(2001, 12, 1), sido: 28, sigungu: 28110, student: true, employed: false, incomePct: 80, validUntil: ymd(2027, 2, 28) } },
     ]);
   });
 
   it('rejects each bad row with its line number and a reason; good rows still pass', () => {
     const csv = [
       H,
-      'S-1,1999-02-30,11,11620,Y,N,120,2027-03-31', // 2: impossible date
-      'S-2,1999-04-17,99,11620,Y,N,120,2027-03-31', // 3: unknown province
-      'S-3,1999-04-17,11,26110,Y,N,120,2027-03-31', // 4: district outside province
-      'S-4,1999-04-17,11,11620,maybe,N,120,2027-03-31', // 5: not a yes/no
-      'S-5,1999-04-17,11,11620,Y,N,-4,2027-03-31', // 6: income out of range
+      'S-1,1999-02-30,11,11620,Y,N,120,2027-03-31,1111111111111111111111111111111111111111111111111111111111111111', // 2: impossible date
+      'S-2,1999-04-17,99,11620,Y,N,120,2027-03-31,2222222222222222222222222222222222222222222222222222222222222222', // 3: unknown province
+      'S-3,1999-04-17,11,26110,Y,N,120,2027-03-31,3333333333333333333333333333333333333333333333333333333333333333', // 4: district outside province
+      'S-4,1999-04-17,11,11620,maybe,N,120,2027-03-31,4444444444444444444444444444444444444444444444444444444444444444', // 5: not a yes/no
+      'S-5,1999-04-17,11,11620,Y,N,-4,2027-03-31,5555555555555555555555555555555555555555555555555555555555555555', // 6: income out of range
       'S-6,1999-04-17,11,11620,Y,N,120', // 7: missing column
-      'S-7,1999-04-17,11,11620,Y,N,120,2027-03-31', // 8: ok
-      'S-7,2000-01-01,11,11620,Y,N,100,2027-03-31', // 9: duplicate reference (one credential per person)
-      'bad ref!,1999-04-17,11,11620,Y,N,120,2027-03-31', // 10: reference not [A-Za-z0-9_-]
+      'S-7,1999-04-17,11,11620,Y,N,120,2027-03-31,7777777777777777777777777777777777777777777777777777777777777777', // 8: ok
+      'S-7,2000-01-01,11,11620,Y,N,100,2027-03-31,8888888888888888888888888888888888888888888888888888888888888888', // 9: duplicate reference (one credential per person)
+      'bad ref!,1999-04-17,11,11620,Y,N,120,2027-03-31,9999999999999999999999999999999999999999999999999999999999999999', // 10: reference not [A-Za-z0-9_-]
+      'S-8,1999-04-17,11,11620,Y,N,120,2027-03-31,not-a-key', // 11: holder_key must be 64 hex
+      'S-9,1999-04-17,11,11620,Y,N,120,2027-03-31,7777777777777777777777777777777777777777777777777777777777777777', // 12: duplicate holder_key (one credential per key)
     ].join('\n');
     const { records, errors } = parseRegistrarCsv(csv);
     expect(records.map((r) => r.line)).toEqual([8]);
-    expect(errors.map((e) => e.line)).toEqual([2, 3, 4, 5, 6, 7, 9, 10]);
+    expect(errors.map((e) => e.line)).toEqual([2, 3, 4, 5, 6, 7, 9, 10, 11, 12]);
     for (const e of errors) expect(e.reason.length).toBeGreaterThan(5);
   });
 
