@@ -1,5 +1,7 @@
-// Demo video: TTS narration (macOS `say`: Yuna for Korean, Samantha for English) + screen recording of
-// the deck and the live demo (Playwright, 1280x720) with captions burned in, muxed by ffmpeg. No human voice.
+// Demo video: neural TTS narration (edge-tts; ko-KR-InJoonNeural for Korean, en-US-AndrewMultilingualNeural for
+// English) + screen recording of the deck and the live demo (Playwright, 1280x720) with captions burned in, muxed by
+// ffmpeg. No human voice. Needs edge-tts (`pip install edge-tts`); EDGE_TTS=/path/to/edge-tts if it is not on PATH.
+// Another voice or speed is one env var away: VOICE=ko-KR-SunHiNeural RATE=+5% node scripts/record-video.mjs
 // Korean (Midnight Korea Hackathon):  FFMPEG=/path/to/ffmpeg node scripts/record-video.mjs
 // English (3rd-Web-Hack, grant preset, 3:2 deck slides as PNGs):
 //   FFMPEG=… node scripts/record-video.mjs --lang en --preset grant --scenes docs/video/scenes-en.json \
@@ -20,15 +22,18 @@ const OUT = 'docs/video';
 const WORK = join(OUT, LANG === 'ko' ? 'work' : `work-${LANG}`);
 mkdirSync(WORK, { recursive: true });
 const scenes = JSON.parse(readFileSync(opt('scenes', join(OUT, 'scenes.json')), 'utf8'));
-const VOICE = LANG === 'ko' ? ['-v', 'Yuna', '-r', '188'] : ['-v', 'Samantha', '-r', '175'];
+const EDGE_TTS = process.env.EDGE_TTS ?? 'edge-tts';
+const VOICE = process.env.VOICE ?? (LANG === 'ko' ? 'ko-KR-InJoonNeural' : 'en-US-AndrewMultilingualNeural');
+// Korean at +15% keeps the demo part (s05–s15) under the 2-minute on-stage slot
+const RATE = process.env.RATE ?? (LANG === 'ko' ? '+15%' : '+0%');
 const READY = LANG === 'ko' ? '자격만 증명해요' : 'not who you are';
 
-// 1) narration clips and their durations
+// 1) narration clips (neural TTS, one mp3 per scene → 48 kHz stereo wav) and their durations
 for (const s of scenes) {
-  const aiff = join(WORK, `${s.id}.aiff`);
-  execFileSync('say', [...VOICE, '-o', aiff, LANG === 'ko' ? s.ko : s.en]);
+  const mp3 = join(WORK, `${s.id}.mp3`);
+  execFileSync(EDGE_TTS, ['--voice', VOICE, `--rate=${RATE}`, '--text', LANG === 'ko' ? s.ko : s.en, '--write-media', mp3]);
   const wav = join(WORK, `${s.id}.wav`);
-  execFileSync(FFMPEG, ['-y', '-loglevel', 'error', '-i', aiff, '-ar', '48000', '-ac', '2', wav]);
+  execFileSync(FFMPEG, ['-y', '-loglevel', 'error', '-i', mp3, '-ar', '48000', '-ac', '2', wav]);
 }
 function durationOf(wav) {
   try {
@@ -162,4 +167,4 @@ writeFileSync(
   join(OUT, `${NAME}.en.srt`),
   scenes.map((s, i) => `${i + 1}\n${ts(starts[i])} --> ${ts(starts[i] + s.seconds)}\n${s.en}\n`).join('\n'),
 );
-console.log(JSON.stringify({ seconds: Math.round(total), scenes: scenes.length, out: join(OUT, `${NAME}.mp4`) }));
+console.log(JSON.stringify({ seconds: Math.round(total), voice: VOICE, scenes: scenes.length, out: join(OUT, `${NAME}.mp4`) }));
