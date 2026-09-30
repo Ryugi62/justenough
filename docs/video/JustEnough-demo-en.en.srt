@@ -1,63 +1,63 @@
 1
-00:00:00,000 --> 00:00:06,200
+00:00:00,000 --> 00:00:06,770
 Public blockchains can't check who qualifies without exposing who you are. JustEnough fixes that on Midnight.
 
 2
-00:00:07,102 --> 00:00:15,852
+00:00:07,673 --> 00:00:18,353
 Today a grant or an airdrop either collects ID documents, or gets farmed. LayerZero flagged over eight hundred thousand addresses as potential sybils.
 
 3
-00:00:16,755 --> 00:00:25,335
+00:00:19,255 --> 00:00:28,475
 With JustEnough, your credential stays on your device. From your claim, the chain learns two facts: you are eligible, and it is your first claim.
 
 4
-00:00:26,237 --> 00:00:33,767
+00:00:29,377 --> 00:00:38,087
 Now the live demo. The compiled Compact circuits run in your browser, with no wallet. The scenario is a Web3 community grant.
 
 5
-00:00:34,668 --> 00:00:41,438
+00:00:38,990 --> 00:00:46,450
 An issuer vouches for applicant A once. Only a salted hash goes on the ledger. The values stay on A's device.
 
 6
-00:00:42,340 --> 00:00:49,070
+00:00:47,353 --> 00:00:55,343
 The grant's rule is public: age nineteen to thirty-four, lives in Seoul, enrolled student. One grant per person.
 
 7
-00:00:49,971 --> 00:00:52,291
+00:00:56,246 --> 00:00:59,246
 A checks every condition on their own device,
 
 8
-00:00:53,193 --> 00:01:02,133
+00:01:00,148 --> 00:01:11,068
 and applies. On the right is what the chain sees: one receipt, called a nullifier. A live scan of the public data finds none of A's private values.
 
 9
-00:01:03,035 --> 00:01:09,245
+00:01:11,971 --> 00:01:19,001
 Applying twice gives the same nullifier, so the circuit refuses. The grant still doesn't know who tried.
 
 10
-00:01:10,146 --> 00:01:14,836
+00:01:19,903 --> 00:01:26,073
 Applicant B is not enrolled. Submitting anyway fails: no proof can be made.
 
 11
-00:01:15,738 --> 00:01:21,238
+00:01:26,974 --> 00:01:33,594
 Rewriting the value to enrolled fails too. The hash no longer matches anything the issuer published.
 
 12
-00:01:22,139 --> 00:01:28,619
+00:01:34,497 --> 00:01:42,417
 At closing, the operator reveals a draw seed it committed before anyone applied. Anyone can recompute who won.
 
 13
-00:01:29,521 --> 00:01:34,241
+00:01:43,320 --> 00:01:48,790
 Only a selected holder can claim. Nobody else's data ever reached the program.
 
 14
-00:01:35,142 --> 00:01:43,532
+00:01:49,692 --> 00:01:59,222
 The same flow ran on a local Midnight network with real zero-knowledge proofs: eight transactions, and zero attribute values in the public state.
 
 15
-00:01:44,434 --> 00:01:51,804
+00:02:00,123 --> 00:02:08,423
 Under the hood: one Compact contract with six circuits, one hundred and eighteen automated tests, and CI on every push.
 
 16
-00:01:52,705 --> 00:01:58,595
+00:02:09,326 --> 00:02:15,546
 Try it without a wallet, at the link below. JustEnough. Prove you qualify, not who you are.
